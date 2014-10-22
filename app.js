@@ -8,6 +8,9 @@ var express      = require('express'),
     session      = require('express-session'),
     helpers      = require('express-helpers');
 
+// socket.io
+var io = require('socket.io')(require('http').Server(express()));
+
 // Routes
 var index  = require("./routes/index");
 
