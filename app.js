@@ -21,15 +21,13 @@ require('./models/event');
 var connection_string = 'localhost/serendipity';
 
 if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
-      connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
-	        process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
-	        process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-	        process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-	        process.env.OPENSHIFT_APP_NAME;
-    }
+  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
+                      process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
+                      process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+                      process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+                      process.env.OPENSHIFT_APP_NAME;
+}
 mongoose.connect(connection_string);
-
-var db = mongoose.connection;
 
 // Routes
 var users  = require("./routes/users");
@@ -56,9 +54,9 @@ app.use(cookieParser());
 
 // Session control
 app.use(session({secret: 'secret sceret screet',
-		 saveUninitialized: true,
-		 resave: true
-		}));
+  saveUninitialized: true,
+  resave: true
+}));
 
 // Static serving of "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -78,7 +76,8 @@ app.use(function(req, res, next) {
 // error handlers
 
 // Mongoose error handler
-db.on('error', console.error.bind(console, 'connection error:'));
+mongoose.connection.on('error',
+                       console.error.bind(console, 'connection error:'));
 
 // Development error handler
 // Will print stacktrace
@@ -100,7 +99,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
     res.json(err);
     res.end();
-    
 });
 
 var port = process.env.OPENSHIFT_NODEJS_PORT;
@@ -110,4 +108,3 @@ app.listen(port || 8080, ip);
 
 
 module.exports = app;
-
