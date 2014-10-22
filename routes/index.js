@@ -1,13 +1,14 @@
 var express = require('express'),
     router  = express.Router();
 
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
+var Util = require('../models/util');
 
-var Util = require('../util/util');
+var Game = require('../models/game'),
+    game = Game();
 
 
 router.get('/', Util.checkAuth, function(req, res, next) {
+  res.json({response: "hello"});
 });
 
 

@@ -8,30 +8,8 @@ var express      = require('express'),
     session      = require('express-session'),
     helpers      = require('express-helpers');
 
-// Database declaration
-var mongo    = require('mongodb'),
-    mongoose = require('mongoose');
-
-// Put into mongoose
-require('./models/user');
-require('./models/event');
-
-// Connect the mongoose wrapper to the database
-// Choose OPENSHIFT connection path if it is defined.
-var connection_string = 'localhost/serendipity';
-
-if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
-  connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
-                      process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
-                      process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-                      process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-                      process.env.OPENSHIFT_APP_NAME;
-}
-mongoose.connect(connection_string);
-
 // Routes
-var users  = require("./routes/users");
-var events = require("./routes/events");
+var index  = require("./routes/index");
 
 // App and express-helpers
 var app = express();
@@ -63,8 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Give URL(s) for a file to use
 // See "Routes" above for definitions of use files
-app.use('/users', users);
-app.use('/events', events);
+app.use('/', index);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -75,10 +52,6 @@ app.use(function(req, res, next) {
 
 // error handlers
 
-// Mongoose error handler
-mongoose.connection.on('error',
-                       console.error.bind(console, 'connection error:'));
-
 // Development error handler
 // Will print stacktrace
 if (app.get('env') === 'development') {
@@ -86,10 +59,6 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
       res.json(err);
       res.end();
-      // res.render('error', {
-      // 	  message: err.message,
-      // 	  error: err
-      // });
   });
 }
 
