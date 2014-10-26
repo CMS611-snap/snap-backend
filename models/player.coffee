@@ -14,7 +14,7 @@ class Player
 
   sendSnap: (word, d_score)->
   	@score += d_score
-  	console.log @score
+  	console.log @name, @score
   	@score
   	# send stuff
 

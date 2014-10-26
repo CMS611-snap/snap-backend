@@ -15,6 +15,13 @@ $(function() {
   });
 
   socket.on('user joined', function(data) {
-    console.log('user joined: ' + data.player);
+    console.log('user joined: ' + data);
+    $('#info').append(JSON.stringify(data) + '<br>');
   });
+
+  socket.on('snap', function(data) {
+    console.log('snap ' + data);
+    $('#info').append(JSON.stringify(data) + '<br>');
+  });
+
 });

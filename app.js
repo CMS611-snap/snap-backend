@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -23,36 +24,32 @@ var Player = require('./models/player');
 var Game = require('./models/game');
     game = new Game();
 
-
 ////////////////////////////////////////////////////
 // Socket.io
 io.on('connection', function (socket) {
   console.log("CONNECTION");
 
   socket.on('new player', function (playerName) {
-    console.log("NEW PLAYER");
-    var player = new Player(playerName);
+    console.log("NEW PLAYER " + playerName);
+    var player = new Player(0, socket, playerName);
+    socket.player = player
 
-    socket.player = player;
     game.addPlayer(player);
 
-    socket.emit('login', {
-    });
-
-    socket.broadcast.emit('user joined', {
-      player: socket.player,
+    socket.emit('user joined', {
+      player: socket.player.name,
     });
   });
 
   // when the client emits 'new message', this listens and executes
-  socket.on('new word', function (data) {
-    console.log("NEW WORD");
+  socket.on('new word', function (word) {
+    console.log("NEW WORD " + word);
 
-    game.addWord(socket.player, data);
+    game.addWord(socket.player, word);
 
-    socket.broadcast.emit('new word', {
-      player: socket.player,
-      word: data
+    socket.emit('new word', {
+      player: socket.player.name,
+      word: word
     });
   });
 
@@ -62,27 +59,13 @@ io.on('connection', function (socket) {
     // REMOVE PLAYER FROM GAME
     //
 
-    // echo globally that this client has left
     socket.broadcast.emit('player left', {
-      player: socket.player,
+      player: socket.player.name,
     });
   });
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = app;
