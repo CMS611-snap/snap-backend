@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Give URL(s) for a file to use
 // See "Routes" above for definitions of use files
-app.use('/*', index);
+app.use('/', index);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
