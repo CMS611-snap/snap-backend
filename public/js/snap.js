@@ -10,4 +10,13 @@ $(function() {
 
   });
 
+  $('#wordButton').click(function() {
+    console.log("WORDBUTTON");
+
+    var word = $('newWord').val();
+    socket.emit('new word', word);
+
+  });
+
+
 });

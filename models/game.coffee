@@ -1,18 +1,18 @@
 class Game
-   constructor: () ->
+  constructor: () ->
      @players = []
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
 
   addWord: (player, word) ->
-    player.addWord(word)
     snapped = false
     for p in @players
       if word in p.words
         p.sendSnap(word, 1)
         snapped = true
-    if snap
+    if snapped
       player.sendSnap(word, 1)
+    player.addWord(word)
 
 module.exports = Game

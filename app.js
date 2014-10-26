@@ -1,20 +1,5 @@
 #!/usr/bin/env node
 
-// General libraries used
-//var express      = require('express'),
-    //path         = require('path'),
-    //favicon      = require('serve-favicon'),
-    //logger       = require('morgan'),
-    //cookieParser = require('cookie-parser'),
-    //bodyParser   = require('body-parser'),
-    //session      = require('express-session'),
-    //helpers      = require('express-helpers');
-
-
-
-
-
-
 
 
 var express = require('express');
@@ -31,7 +16,6 @@ server.listen(port, function () {
 app.use(express.static(__dirname + '/public'));
 
 
-console.log("dir: " + __dirname);
 
 ////////////////////////////////////////////////////
 // Models
@@ -65,6 +49,9 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new word', function (data) {
+    console.log("NEW WORD");
+
+    game.addWord(socket.player, data);
 
     socket.broadcast.emit('new word', {
       player: socket.player,
