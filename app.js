@@ -1,12 +1,9 @@
 #!/usr/bin/env node
-
-
-
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8080;
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -30,7 +27,7 @@ var Game = require('./models/game');
 ////////////////////////////////////////////////////
 // Socket.io
 io.on('connection', function (socket) {
-    console.log("CONNECTION");
+  console.log("CONNECTION");
 
   socket.on('new player', function (playerName) {
     console.log("NEW PLAYER");
