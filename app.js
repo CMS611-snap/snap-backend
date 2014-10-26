@@ -9,7 +9,7 @@ var express      = require('express'),
     helpers      = require('express-helpers');
 
 // socket.io
-var io = require('socket.io')(require('http').Server(express()));
+//var io = require('socket.io')(require('http').Server(express()));
 
 // Routes
 var index  = require("./routes/index");
@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Give URL(s) for a file to use
 // See "Routes" above for definitions of use files
-app.use('/', index);
+app.use('/*', index);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
