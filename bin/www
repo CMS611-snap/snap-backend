@@ -1,10 +1,74 @@
 #!/usr/bin/env node
-var debug = require('debug')('myapp');
-var app = require('../app');
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('../..')(server);
+var port = process.env.PORT || 3000;
 
-// If the OPENSHIFT environment defines a port or ip,
-// use those. Otherwise, use 8080 and localhost
-var server = app.listen(process.env.OPENSHIFT_NODEJS_PORT || 8080,
-                        process.env.OPENSHIFT_NODEJS_IP);
+server.listen(port, function () {
+  console.log('Server listening at port %d', port);
+});
 
-console.log("Port: " + (process.env.OPENSHIFT_NODEJS_PORT || 8080));
+
+app.use(express.static(__dirname + '/public'));
+
+
+console.log("dir: " + __dirname);
+
+////////////////////////////////////////////////////
+// Models
+//require("coffee-script/register")
+
+//var Player = require('../models/player');
+
+//var Game = require('../models/game');
+    //game = new Game();
+
+
+////////////////////////////////////////////////////
+// Socket.io
+io.on('connection', function (socket) {
+    console.log("CONNECTION");
+
+  //socket.on('new player', function (playerName) {
+    //console.log("NEW PLAYER");
+    //var player = new Player(playerName);
+
+    //socket.player = player;
+    //game.addPlayer(player);
+
+    //socket.emit('login', {
+    //});
+
+    //socket.broadcast.emit('user joined', {
+      //player: socket.player,
+    //});
+  //});
+
+  //// when the client emits 'new message', this listens and executes
+  //socket.on('new word', function (data) {
+
+    //socket.broadcast.emit('new word', {
+      //player: socket.player,
+      //word: data
+    //});
+  //});
+
+  //// when the user disconnects.. perform this
+  //socket.on('disconnect', function () {
+    //////////////////////////////
+    //// REMOVE PLAYER FROM GAME
+    ////
+
+    //// echo globally that this client has left
+    //socket.broadcast.emit('player left', {
+      //player: socket.player,
+    //});
+  //});
+
+
+});
+
+
+
+

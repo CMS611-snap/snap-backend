@@ -3,16 +3,11 @@ var express = require('express'),
 
 require("coffee-script/register")
 
-//var io = require('socket.io')(require('http').Server(express()));
-
 var Util = require('../models/util');
-
-var Game = require('../models/game');
-    game = new Game();
 
 var Player = require('../models/player');
 
-
+// Game is attached to req.game
 
 router.post('/', Util.checkAuth, function(req, res, next) {
   var playerName = req.body.playerName;
@@ -20,7 +15,7 @@ router.post('/', Util.checkAuth, function(req, res, next) {
   console.log("New Player: " + playerName);
 
   var newPlayer = new Player(playerName);
-  game.addPlayer(newPlayer);
+  req.game.addPlayer(newPlayer);
 
   res.json({response: "success"});
 });
@@ -31,9 +26,5 @@ router.get('/', Util.checkAuth, function(req, res, next) {
 });
 
 
-
-//io.on('connection', function(socket){
-  //console.log('a user connected');
-//});
 
 module.exports = router;
