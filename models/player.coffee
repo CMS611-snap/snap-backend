@@ -15,7 +15,7 @@ class Player
   sendSnap: (word, d_score)->
   	@score += d_score
   	console.log @name, @score
-  	@score
+  	@socket.emit("snap", {player:@name, d_score:d_score})
   	# send stuff
 
 
