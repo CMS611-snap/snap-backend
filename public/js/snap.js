@@ -5,7 +5,7 @@ $(function() {
   $('#joinButton').click(function() {
     console.log("ADDUSER");
 
-    var username = $('playerName').val();
+    var username = $('#playerName').val();
     socket.emit('new player', username);
 
   });
@@ -13,7 +13,7 @@ $(function() {
   $('#wordButton').click(function() {
     console.log("WORDBUTTON");
 
-    var word = $('newWord').val();
+    var word = $('#newWord').val();
     socket.emit('new word', word);
 
   });
