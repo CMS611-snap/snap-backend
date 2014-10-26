@@ -8,9 +8,9 @@ class Game
   addWord: (player, word) ->
     player.addWord(word)
     snapped = false
-    for p in @players:
-      if word in p.words:
+    for p in @players
+      if word in p.words
         p.sendSnap(word, 1)
         snapped = true
-    if snap:
+    if snap
       player.sendSnap(word, 1)
