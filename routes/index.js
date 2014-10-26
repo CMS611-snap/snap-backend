@@ -8,7 +8,7 @@ var io = require('socket.io')(require('http').Server(express()));
 var Util = require('../models/util');
 
 var Game = require('../models/game');
-    //game = Game();
+    game = Game();
 
 var Player = require('../models/player');
 

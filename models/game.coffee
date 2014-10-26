@@ -6,4 +6,4 @@ class Game
   addPlayer: (newPlayer) ->
     players.push(newPlayer)
 
-
+module.exports = Game
