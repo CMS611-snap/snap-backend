@@ -14,3 +14,5 @@ class Game
         snapped = true
     if snap
       player.sendSnap(word, 1)
+
+module.exports = Game
