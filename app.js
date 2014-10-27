@@ -9,8 +9,6 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-app.use(express.static(__dirname + '/public'));
-
 ////////////////////////////////////////////////////
 // Models
 require("coffee-script/register")
@@ -20,6 +18,14 @@ var Player = require('./models/player');
 var Game = require('./models/game');
     game = new Game(io);
 
+
+////////////////////////////////////////////////////
+// RPC methods
+app.get('/rpc/words', function(req, res) {
+    res.send(game.getWords());
+});
+
+app.use('/', express.static(__dirname + '/public'));
 
 ////////////////////////////////////////////////////
 // Socket.io

@@ -63,4 +63,11 @@ class Game
           counts[word] = 1
     return counts
 
+  getWords: () ->
+      words = []
+      for player in @players
+          for word in player.words
+              words.push word
+      return words
+
 module.exports = Game
