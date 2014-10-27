@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -10,10 +9,7 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-
 app.use(express.static(__dirname + '/public'));
-
-
 
 ////////////////////////////////////////////////////
 // Models
@@ -24,13 +20,14 @@ var Player = require('./models/player');
 var Game = require('./models/game');
     game = new Game(io);
 
+
 ////////////////////////////////////////////////////
 // Socket.io
 io.on('connection', function (socket) {
   console.log("CONNECTION");
 
   socket.on('new player', function (playerName) {
-    console.log("NEW PLAYER " + playerName);
+    console.log("PLAYER " + playerName);
     var player = new Player(0, socket, game, playerName);
     socket.player = player
 
@@ -43,7 +40,7 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new word', function (word) {
-    console.log("NEW WORD " + word);
+    console.log("WORD " + word);
 
     socket.emit('new word', {
       player: socket.player.name,
@@ -51,6 +48,17 @@ io.on('connection', function (socket) {
     });
 
     game.addWord(socket.player, word);
+
+    var words = game.getWordCounts();
+    var wordCounts = [];
+    for (countedWord in words) {
+      wordCounts.push({text: countedWord,
+                       size: words[countedWord] * 30});
+    }
+
+    socket.emit('wordcloud', {
+      words: wordCounts
+    });
 
   });
 
@@ -60,9 +68,6 @@ io.on('connection', function (socket) {
     // REMOVE PLAYER FROM GAME
     //
   });
-
-
 });
-
 
 module.exports = app;
