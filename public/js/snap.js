@@ -24,4 +24,8 @@ $(function() {
     $('#info').append(JSON.stringify(data) + '<br>');
   });
 
+  socket.on('disconnect', function() {
+    $('#info').empty();
+  })
+
 });

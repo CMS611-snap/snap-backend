@@ -58,10 +58,6 @@ io.on('connection', function (socket) {
     ////////////////////////////
     // REMOVE PLAYER FROM GAME
     //
-
-    socket.broadcast.emit('player left', {
-      player: socket.player.name,
-    });
   });
 
 
