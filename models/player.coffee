@@ -5,11 +5,14 @@ class Player
     @score = 0
 
 
-  canAddWord: (word) ->
-    @words.indexOf(word) == -1
+  hasGuessed: (word) ->
+    word in @words
+
+  hasSnapped: (word) ->
+    word in @snappedWords
 
   addWord: (word) ->
-    return false unless @canAddWord(word)
+    return false if @hasGuessed(word)
     @words.push(word)
     true
 

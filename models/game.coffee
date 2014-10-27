@@ -9,14 +9,14 @@ class Game
   addWord: (player, word) ->
     
     #Reject word if already guessed by player
-    if word in player.words
+    if player.hasGuessed(word)
       return
 
     snapped = false
     for p in @players
-      if word in p.words
+      if p.hasGuessed(word)
         snapped = true
-        if word not in p.snappedWords
+        if p.hasSnapped(word)
           p.sendSnap(word, 1)
     
     if snapped
