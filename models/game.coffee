@@ -7,7 +7,7 @@ class Game
 
   addWord: (player, word) ->
     
-    //Reject word if already guessed by player
+    #Reject word if already guessed by player
     if word in player.words
       return
 
