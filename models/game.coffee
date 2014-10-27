@@ -16,15 +16,44 @@ class Game
     for p in @players
       if p.hasGuessed(word)
         snapped = true
-        if p.hasSnapped(word)
+        if not p.hasSnapped(word)
           p.sendSnap(word, 1)
     
     if snapped
       player.sendSnap(word, 1)
+    
     player.addWord(word)
-
+    
+    if @isGameOver()
+      @gameOver()
+  
+  isGameOver: () ->
+    over = false
+    for p in @players
+      if p.score >= @maxScore
+        over = true
+    return over
+  
   gameOver: () ->
     @io.emit "gameOver",
       winners:(p.name for p in @players when p.score == @maxScore)
-
+    
+    @exportData()
+  
+  exportData: () ->
+    freq = {}
+    for p in @players
+      for word in p.words
+        if word in freq
+          freq[word] += 1
+        else
+          freq[word] = 1
+    csv = ''
+    for word, frequency of freq
+      csv = csv + word + ', '+frequency + '\n'
+    
+    #TODO: do something with csv
+    console.log(csv)
+    
+  
 module.exports = Game

@@ -25,11 +25,5 @@ class Player
       d_score:d_score
       word:word
 
-    # check if game is over
-    # 10 snaps wins
-    if @score == @game.maxScore
-      @game.gameOver(@)
-
-
 
 module.exports = Player
