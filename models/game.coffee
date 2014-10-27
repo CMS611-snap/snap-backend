@@ -1,6 +1,7 @@
 class Game
-  constructor: () ->
+  constructor: (@io) ->
      @players = []
+     @maxScore = 10
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
@@ -14,11 +15,16 @@ class Game
     snapped = false
     for p in @players
       if word in p.words
-        p.sendSnap(word, 1)
         snapped = true
+        if word not in p.snappedWords
+          p.sendSnap(word, 1)
     
     if snapped
       player.sendSnap(word, 1)
     player.addWord(word)
+
+  gameOver: () ->
+    @io.emit "gameOver",
+      winners:(p.name for p in @players when p.score == @maxScore)
 
 module.exports = Game

@@ -22,7 +22,7 @@ require("coffee-script/register")
 var Player = require('./models/player');
 
 var Game = require('./models/game');
-    game = new Game();
+    game = new Game(io);
 
 ////////////////////////////////////////////////////
 // Socket.io
@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
 
   socket.on('new player', function (playerName) {
     console.log("NEW PLAYER " + playerName);
-    var player = new Player(0, socket, playerName);
+    var player = new Player(0, socket, game, playerName);
     socket.player = player
 
     game.addPlayer(player);
@@ -45,12 +45,13 @@ io.on('connection', function (socket) {
   socket.on('new word', function (word) {
     console.log("NEW WORD " + word);
 
-    game.addWord(socket.player, word);
-
     socket.emit('new word', {
       player: socket.player.name,
       word: word
     });
+
+    game.addWord(socket.player, word);
+
   });
 
   // when the user disconnects.. perform this

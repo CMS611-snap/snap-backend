@@ -24,6 +24,16 @@ $(function() {
     $('#info').append(JSON.stringify(data) + '<br>');
   });
 
+  socket.on('new word', function(data) {
+    console.log('new word ' + data);
+    $('#info').append(JSON.stringify(data) + '<br>');
+  });
+  
+  socket.on('gameOver', function(data) {
+    console.log('gameOver ' + data);
+    $('#info').append(JSON.stringify(data) + '<br>');
+  });
+
   socket.on('disconnect', function() {
     $('#info').empty();
   })
