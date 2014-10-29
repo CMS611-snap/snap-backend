@@ -8,6 +8,8 @@ class Game
 
   addWord: (player, word) ->
 
+    word = word.toLowerCase().trim()
+
     #Reject word if already guessed by player
     if player.hasGuessed(word)
       return
