@@ -20,6 +20,12 @@ var Game = require('./models/game');
 
 
 ////////////////////////////////////////////////////
+// Globals
+var game_started = false;
+var game_length = 60 * 1000; // 60 seconds
+//var game_length = 6 * 1000;
+
+////////////////////////////////////////////////////
 // RPC methods
 app.get('/rpc/words', function(req, res) {
     res.send(game.getWords());
@@ -47,6 +53,19 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new word', function (word) {
     console.log("WORD " + word);
+
+    if ( ! game_started) {
+      setTimeout(function() {
+        var scores = [];
+        for (player in game.players) {
+          scores.push({player: player.name,
+                       score: player.score});
+        }
+        socket.emit('game over', {
+          scores: scores
+        });
+      }, game_length);
+    }
 
     socket.emit('new word', {
       player: socket.player.name,
