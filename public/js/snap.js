@@ -29,8 +29,8 @@ $(function() {
     $('#info').append(JSON.stringify(data) + '<br>');
   });
 
-  socket.on('gameOver', function(data) {
-    console.log('gameOver ' + data);
+  socket.on('game over', function(data) {
+    console.log('game over ' + data);
     $('#info').append(JSON.stringify(data) + '<br>');
   });
 

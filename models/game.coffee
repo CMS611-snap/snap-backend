@@ -37,7 +37,7 @@ class Game
     return over
 
   gameOver: () ->
-    @io.emit "gameOver",
+    @io.emit "game over",
       winners:(p.name for p in @players when p.score == @maxScore)
     @exportData()
 
@@ -53,7 +53,18 @@ class Game
     for word, frequency of freq
       csv = csv + word + ', '+frequency + '\n'
     #TODO: do something with csv
+    console.log '#### Game Data ####'
+    console.log 'Time:' + process.hrtime()
     console.log(csv)
+    
+    @resetGame()
+  
+  resetGame: () ->
+    console.log '... resetting game ...'
+    for p in @players
+      p.words = []
+      p.snappedWords = []
+      p.score = 0
 
   getWordCounts: () ->
     counts = {}
