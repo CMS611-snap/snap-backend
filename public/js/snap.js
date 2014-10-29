@@ -45,6 +45,8 @@ $(function() {
     console.log('wordcloud ' + JSON.stringify(data));
     words = data.words;
 
+    d3.select("#graph").select("svg").remove();
+
     wordcloud.words(words);
     wordcloud.start();
   });
@@ -58,7 +60,7 @@ $(function() {
       .size([300, 300])
       .words(words)
       .padding(5)
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .rotate(function() { return 0; })//~~(Math.random() * 2) * 90; })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
@@ -66,7 +68,7 @@ $(function() {
 
 
   function draw(words) {
-    d3.select("body").append("svg")
+    d3.select("#graph").append("svg")
         .attr("width", 300)
         .attr("height", 300)
       .append("g")
