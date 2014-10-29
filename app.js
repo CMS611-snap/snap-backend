@@ -59,7 +59,7 @@ io.on('connection', function (socket) {
     var wordCounts = [];
     for (countedWord in words) {
       wordCounts.push({text: countedWord,
-                       size: words[countedWord] * 30});
+                       size: Math.sqrt(words[countedWord] * 200)});
     }
 
     socket.emit('wordcloud', {

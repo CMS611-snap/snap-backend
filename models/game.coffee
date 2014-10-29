@@ -56,9 +56,9 @@ class Game
     console.log '#### Game Data ####'
     console.log 'Time:' + process.hrtime()
     console.log(csv)
-    
+
     @resetGame()
-  
+
   resetGame: () ->
     console.log '... resetting game ...'
     for p in @players
