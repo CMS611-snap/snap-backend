@@ -81,7 +81,10 @@ io.on('connection', function (socket) {
                        size: Math.sqrt(words[countedWord] * 200)});
     }
 
-    socket.emit('wordcloud', {
+    // TODO(sam): this is a hack to get the moderator interface to work; we
+    // should have moderators join like any player and notify only moderator
+    // sockets
+    io.sockets.emit('wordcloud', {
       words: wordCounts
     });
 
