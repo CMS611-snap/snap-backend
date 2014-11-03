@@ -21,7 +21,8 @@
     "morgan": "~1.3.0",
     "serve-favicon": "~2.1.3",
     "sillyname": "0.0.3",
-    "socket.io": "^1.1.0"
+    "socket.io": "^1.1.0",
+    "chai": "*"
   },
   "devDependencies": {
     "minimist": "^1.1.0",
