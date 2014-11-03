@@ -1,0 +1,28 @@
+version: 1
+config:
+    # gives the number of ms each unit of time represents
+    timeUnitsMillis: 1000
+events:
+    -
+        player: test1
+        type: join
+        time: 0
+    -
+        player: test2
+        type: join
+        time: 0.3
+    -
+        player: test1
+        type: word
+        word: foo
+        time: 1
+    -
+        player: test2
+        type: word
+        word: bar
+        time: 1.5
+    -
+        player: test2
+        type: word
+        word: foo
+        time: 2

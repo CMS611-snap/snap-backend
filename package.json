@@ -23,5 +23,10 @@
     "sillyname": "0.0.3",
     "socket.io": "^1.1.0"
   },
+  "devDependencies": {
+    "minimist": "^1.1.0",
+    "socket.io-client": "^1.2.0",
+    "yamljs": "^0.2.1"
+  },
   "main": "app.js"
 }
