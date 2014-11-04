@@ -38,6 +38,10 @@ app.use('/', express.static(__dirname + '/public'));
 io.on('connection', function (socket) {
   console.log("CONNECTION");
 
+  socket.on('new game', function (playerName) {
+
+  });
+
   socket.on('new player', function (playerName) {
     console.log("PLAYER " + playerName);
     var player = new Player(0, socket, game, playerName);
@@ -55,13 +59,15 @@ io.on('connection', function (socket) {
     console.log("WORD " + word);
 
     if ( ! game_started) {
+      console.log("TIMER START");
+      game_started = true;
       setTimeout(function() {
         var scores = [];
         for (player in game.players) {
           scores.push({player: player.name,
                        score: player.score});
         }
-        socket.emit('game over', {
+        io.sockets.emit('game over', {
           scores: scores
         });
       }, game_length);
@@ -78,7 +84,8 @@ io.on('connection', function (socket) {
     var wordCounts = [];
     for (countedWord in words) {
       wordCounts.push({text: countedWord,
-                       size: Math.sqrt(words[countedWord] * 200)});
+                       size: words[countedWord] * 30});
+                       //size: Math.sqrt(words[countedWord] * 200)});
     }
 
     // TODO(sam): this is a hack to get the moderator interface to work; we
