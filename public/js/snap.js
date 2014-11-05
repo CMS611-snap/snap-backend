@@ -1,6 +1,19 @@
 $(function() {
 
   var socket = io();
+  
+  $('#setTopicButton').click(function() {
+    var topic = $('#topic').val();
+    console.log("Set Topic To: " + topic);
+    socket.emit('set topic', topic);
+  });  
+
+  $('#startGameButton').click(function() {
+    console.log("Starting Game...");
+    socket.emit('start game');
+  });
+
+
 
   $('#joinButton').click(function() {
     var username = $('#playerName').val();
@@ -12,6 +25,15 @@ $(function() {
     var word = $('#newWord').val();
     console.log("WORDBUTTON: " + word);
     socket.emit('new word', word);
+  });
+  socket.on('new topic', function(topic){
+    console.log('new topic: ' + topic);
+    $('#info').append('TOPIC is : ' + JSON.stringify(topic) + '<br>');
+  });
+
+  socket.on('game started', function(){
+    console.log('game started');
+    $('#info').append('<br>' + 'GAME STARTED!!' + '<br>');
   });
 
   socket.on('user joined', function(data) {

@@ -1,12 +1,38 @@
 class Game
   constructor: (@io) ->
-     @players = []
-     @maxScore = 10
+    @players = []
+    @maxScore = 10
+    @gameLength = 120 * 1000 
+    @topic = "default"
+    @start = false
+    @timer = (ms, func) -> setTimeout func, ms
+    @timerRunning = false
+
+  setTopic: (topic) ->
+    if not @start
+      console.log "Setting Topic to: " + topic
+      @topic = topic
+      @io.sockets.emit "new topic", @topic
+
+  startGame: () ->
+    if not @start
+      console.log "Starting Game"
+      @start = true
+      @timerRunning = true
+      @io.sockets.emit "game started"
+      callback = () =>
+        @timerRunning = false
+        @gameOver()
+      @timer @gameLength, callback      
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
 
   addWord: (player, word) ->
+    # if moderator has not started the game
+    # nobody can submit any words
+    if not @start
+      return
 
     word = word.toLowerCase().trim()
 
@@ -38,8 +64,11 @@ class Game
 
   gameOver: () ->
     @io.emit "game over",
-      winners:(p.name for p in @players when p.score == @maxScore)
+      scores:({player: p.name, score: p.score} for p in @players)
     @exportData()
+    @start = false
+    if @timerRunning
+      clearTimeout(@timer)
 
   exportData: () ->
     freq = {}
@@ -54,7 +83,8 @@ class Game
       csv = csv + word + ', '+frequency + '\n'
     #TODO: do something with csv
     console.log '#### Game Data ####'
-    console.log 'Time:' + process.hrtime()
+    console.log 'Topic: ' + @topic
+    console.log 'Time: ' + process.hrtime()
     console.log(csv)
 
     @resetGame()

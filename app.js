@@ -18,13 +18,6 @@ var Player = require('./models/player');
 var Game = require('./models/game');
     game = new Game(io);
 
-
-////////////////////////////////////////////////////
-// Globals
-var game_started = false;
-var game_length = 60 * 1000; // 60 seconds
-//var game_length = 6 * 1000;
-
 ////////////////////////////////////////////////////
 // RPC methods
 app.get('/rpc/words', function(req, res) {
@@ -38,8 +31,12 @@ app.use('/', express.static(__dirname + '/public'));
 io.on('connection', function (socket) {
   console.log("CONNECTION");
 
-  socket.on('new game', function (playerName) {
-
+  socket.on('start game', function () {
+    game.startGame();
+  });
+  
+  socket.on('set topic', function(topic) {
+    game.setTopic(topic);
   });
 
   socket.on('new player', function (playerName) {
@@ -56,30 +53,15 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new word', function (word) {
+
+    game.addWord(socket.player, word);
+   
+    if (game.start) {
     console.log("WORD " + word);
-
-    if ( ! game_started) {
-      console.log("TIMER START");
-      game_started = true;
-      setTimeout(function() {
-        var scores = [];
-        for (player in game.players) {
-          scores.push({player: player.name,
-                       score: player.score});
-        }
-        io.sockets.emit('game over', {
-          scores: scores
-        });
-      }, game_length);
-    }
-
     socket.emit('new word', {
       player: socket.player.name,
       word: word
     });
-
-    game.addWord(socket.player, word);
-
     var words = game.getWordCounts();
     var wordCounts = [];
     for (countedWord in words) {
@@ -94,6 +76,7 @@ io.on('connection', function (socket) {
     io.sockets.emit('wordcloud', {
       words: wordCounts
     });
+  }
 
   });
 
