@@ -4,15 +4,23 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 8080;
+require("coffee-script/register")
+
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
 ////////////////////////////////////////////////////
-// Models
-require("coffee-script/register")
+// Database stuff
 
+if (process.env.NODE_ENV == '' || process.env.NODE_ENV == 'development') {
+  config = require('./knexfile.coffee');
+
+  knex = require('knex')(config.development);
+}
+////////////////////////////////////////////////////
+// Models
 var Player = require('./models/player');
 
 var Game = require('./models/game');

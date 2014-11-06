@@ -28,5 +28,12 @@ createdb snap
 
 createuser -s snap
 
+hash knex &> /dev/null
+if [ $? -eq 1 ]; then
+    echo >&2 "knex execuble not found. The server has been set up and started, but you need to install knex and run the migrations manually."
+    exit 1;
+fi
+
+knex migrate:latest
 
 echo "Setup complete. The server has been started automatically, you don't need to start it again."
