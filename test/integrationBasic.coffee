@@ -25,7 +25,9 @@ connectTestPlayers = (num, cb)->
 
   # the players are added synchronously
   # start the chain
-  start = addPlayer.bind this, ()-> 
+  start = addPlayer.bind this, ()->
+    # start game after creating users
+    players[0].emit 'start game'
     cb players
 
   if num == 1
@@ -72,5 +74,4 @@ describe "Snap", ->
 
       players[0].emit 'new word', 'foobar'
       players[1].emit 'new word', 'foobar'
-
 
