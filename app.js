@@ -52,6 +52,8 @@ io.on('connection', function (socket) {
     var player = new Player(0, socket, game, playerName);
     socket.player = player
 
+    debugger;
+
     game.addPlayer(player);
 
     socket.emit('user joined', {

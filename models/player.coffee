@@ -1,8 +1,11 @@
+UuidLib = require 'node-uuid'
+
 class Player
   constructor: (@id, @socket, @game,  @name = "") ->
     @words = []
     @snappedWords = []
     @score = 0
+    @uuid = UuidLib.v4()
 
 
   hasGuessed: (word) ->
