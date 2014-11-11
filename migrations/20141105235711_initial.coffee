@@ -5,21 +5,22 @@ exports.up = (knex, Promise) ->
       t.dateTime 'started_at'
       t.dateTime 'ended_at'
       t.timestamps()
-    knex.schema.createTable 'words', (t)->
-      t.increments()
-      t.string('word').index 'word_idx'
-      t.timestamp('created_at').defaultTo(knex.raw('now()'))
-      
-    # each submitted word is an action
-    knex.schema.createTable 'actions', (t)->
-      t.increments()
-      t.integer('game_id').index 'game_id_idx'
-      t.integer('word_id').index 'word_id_id' # id of the word submitted
-      t.uuid 'user_uuid' # unique id generated on each join
 
-      t.integer 'snapped_id' # id of the word snapped with (null if not a snap)
-      t.integer 'snapped_order' # which snap of the same word this is (null if not a snap)
-      t.decimal 'score' # score awarded for an action
+    knex.schema.createTable 'word_submissions', (t)->
+      t.increments()
+      t.integer('game_id').notNullable().index 'w_game_id_idx'
+      t.uuid 'user_uuid'
+      t.string('word').notNullable()
+      t.timestamp('created_at').defaultTo(knex.raw('now()'))
+
+    knex.schema.createTable 'events', (t)->
+      t.increments()
+      t.integer('game_id').notNullable().index 'e_game_id_idx'
+      t.integer('word_submission_id').index 'word_submission_id_idx' # id of the word submission. Nullable.
+      t.uuid 'user_uuid' # unique id generated on each join
+      t.integer('type').notNullable()
+      t.integer 'extra_1'
+      t.integer 'extra_2'
       t.timestamp('created_at').defaultTo(knex.raw('now()'))
   ]
 
@@ -28,8 +29,8 @@ exports.down = (knex, Promise) ->
   return Promise.all [
     knex.schema.hasTable('games').then (e)->
       if e then knex.schema.dropTable 'games'
-    knex.schema.hasTable('words').then (e)->
-      if e then knex.schema.dropTable 'words'
-    knex.schema.hasTable('actions').then (e)->
-      if e then knex.schema.dropTable 'actions'
+    knex.schema.hasTable('word_submissions').then (e)->
+      if e then knex.schema.dropTable 'word_submissions'
+    knex.schema.hasTable('events').then (e)->
+      if e then knex.schema.dropTable 'events'
   ]
