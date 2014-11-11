@@ -14,11 +14,17 @@ server.listen(port, function () {
 ////////////////////////////////////////////////////
 // Database stuff
 
-if (process.env.NODE_ENV == '' || process.env.NODE_ENV == 'development') {
-  config = require('./knexfile.coffee');
-
-  knex = require('knex')(config.development);
+configs = require('./knexfile.coffee');
+switch (process.env.NODE_ENV) {
+  case 'production':
+    config = configs.production;
+    break;
+  default:
+    config = configs.development
+    break;
 }
+knex = require('knex')(config);
+
 ////////////////////////////////////////////////////
 // Models
 var Player = require('./models/player');
