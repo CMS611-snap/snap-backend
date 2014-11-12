@@ -23,14 +23,14 @@ switch (process.env.NODE_ENV) {
     config = configs.development
     break;
 }
-knex = require('knex')(config);
+db = require('knex')(config);
 
 ////////////////////////////////////////////////////
 // Models
 var Player = require('./models/player');
 
 var Game = require('./models/game');
-    game = new Game(io);
+    game = new Game(io, db);
 
 ////////////////////////////////////////////////////
 // RPC methods
