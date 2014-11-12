@@ -1,12 +1,14 @@
 class Game
-  constructor: (@io) ->
+  constructor: (@io, @DbHelper) ->
     @players = []
     @maxScore = 10
-    @gameLength = 120 * 1000 
+    @gameLength = 120 * 1000
     @topic = "default"
     @start = false
     @timer = (ms, func) -> setTimeout func, ms
     @timerRunning = false
+
+    @gameId = null
 
   setTopic: (topic) ->
     if not @start
@@ -18,12 +20,19 @@ class Game
     if not @start
       console.log "Starting Game"
       @start = true
+      @startTime = Date.now()
+
+      # insert the game to db
+      @DbHelper.createGame @topic, (res)=>
+        @gameId = res
+
       @timerRunning = true
       @io.sockets.emit "game started", { gameLength: @gameLength }
       callback = () =>
         @timerRunning = false
         @gameOver()
-      @timer @gameLength, callback      
+      @timer @gameLength, callback    
+    
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
@@ -40,20 +49,26 @@ class Game
     if player.hasGuessed(word)
       return
 
-    snapped = false
-    for p in @players
-      if p.hasGuessed(word)
-        snapped = true
-        if not p.hasSnapped(word)
-          p.sendSnap(word, 1)
+    #Add the submission to db
+    @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
+      snapped = false
+      for p in @players
+        if p.hasGuessed(word)
+          snapped = true
+          if not p.hasSnapped(word)
+            p.sendSnap(word, 1)
 
-    if snapped
-      player.sendSnap(word, 1)
+      if snapped
+        player.sendSnap(word, 1)
 
-    player.addWord(word)
+        #add the snap event to db
+        @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
-    if @isGameOver()
-      @gameOver()
+
+      player.addWord(word)
+
+      if @isGameOver()
+        @gameOver()
 
   isGameOver: () ->
     over = false
@@ -62,9 +77,21 @@ class Game
         over = true
     return over
 
+  winners: () ->
+      winners = []
+      maxScore = 0
+      for p in @players
+          if p.score > maxScore
+              winners = []
+              maxScore = p.score
+          if p.score == maxScore
+              winners.push p.name
+      return winners
+
   gameOver: () ->
-    @io.emit "game over",
+    @io.sockets.emit "game over",
       scores:({player: p.name, score: p.score} for p in @players)
+      winners: @winners()
     @exportData()
     @start = false
     if @timerRunning
@@ -86,6 +113,9 @@ class Game
     console.log 'Topic: ' + @topic
     console.log 'Time: ' + process.hrtime()
     console.log(csv)
+
+    # write to db
+    @DbHelper.stopGame @gameId
 
     @resetGame()
 

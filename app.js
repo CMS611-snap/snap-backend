@@ -14,23 +14,14 @@ server.listen(port, function () {
 ////////////////////////////////////////////////////
 // Database stuff
 
-configs = require('./knexfile.coffee');
-switch (process.env.NODE_ENV) {
-  case 'production':
-    config = configs.production;
-    break;
-  default:
-    config = configs.development
-    break;
-}
-knex = require('knex')(config);
+DbHelper = require('./helpers/db_helper')
 
 ////////////////////////////////////////////////////
 // Models
 var Player = require('./models/player');
 
 var Game = require('./models/game');
-    game = new Game(io);
+    game = new Game(io, DbHelper);
 
 ////////////////////////////////////////////////////
 // RPC methods
