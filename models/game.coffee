@@ -2,7 +2,7 @@ class Game
   constructor: (@io) ->
     @players = []
     @maxScore = 10
-    @gameLength = 120 * 1000 
+    @gameLength = 120 * 1000
     @topic = "default"
     @start = false
     @timer = (ms, func) -> setTimeout func, ms
@@ -62,9 +62,21 @@ class Game
         over = true
     return over
 
+  winners: () ->
+      winners = []
+      maxScore = 0
+      for p in @players
+          if p.score > maxScore
+              winners = []
+              maxScore = p.score
+          if p.score == maxScore
+              winners.push p.name
+      return winners
+
   gameOver: () ->
-    @io.emit "game over",
+    @io.sockets.emit "game over",
       scores:({player: p.name, score: p.score} for p in @players)
+      winners: @winners()
     @exportData()
     @start = false
     if @timerRunning
