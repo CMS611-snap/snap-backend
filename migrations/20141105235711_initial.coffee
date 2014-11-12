@@ -4,7 +4,7 @@ exports.up = (knex, Promise) ->
       t.increments()
       t.dateTime 'started_at'
       t.dateTime 'ended_at'
-      t.timestamps()
+      t.string 'topic'
 
     knex.schema.createTable 'word_submissions', (t)->
       t.increments()
