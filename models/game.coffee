@@ -1,7 +1,5 @@
-DbHelper = require('../helpers/db_helper.coffee')
-
 class Game
-  constructor: (@io, @db) ->
+  constructor: (@io, @DbHelper) ->
     @players = []
     @maxScore = 10
     @gameLength = 120 * 1000 
@@ -25,7 +23,7 @@ class Game
       @startTime = Date.now()
 
       # insert the game to db
-      DbHelper.createGame @db, @topic, (res)=>
+      @DbHelper.createGame @topic, (res)=>
         @gameId = res
 
       @timerRunning = true
@@ -52,7 +50,7 @@ class Game
       return
 
     #Add the submission to db
-    DbHelper.addWordSubmission @db, @gameId, player.uuid, word, (word_index)=>
+    @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
       snapped = false
       for p in @players
         if p.hasGuessed(word)
@@ -64,7 +62,7 @@ class Game
         player.sendSnap(word, 1)
 
         #add the snap event to db
-        DbHelper.addEvent @db, @gameId, word_index, player.uuid, {type: DbHelper.eventType.snap}
+        @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
 
       player.addWord(word)
@@ -105,7 +103,7 @@ class Game
     console.log(csv)
 
     # write to db
-    DbHelper.stopGame(@db, @gameId)
+    @DbHelper.stopGame @gameId
 
     @resetGame()
 

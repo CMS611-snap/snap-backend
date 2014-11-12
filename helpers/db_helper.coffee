@@ -1,9 +1,21 @@
+configs = require('../knexfile.coffee')
+switch process.env.NODE_ENV
+  when 'production' then config = configs.production
+  when 'dev_db' then config = configs.development
+  else config = null
+
+db = if config? then require('knex')(config) else null
+
 module.exports =
+  db: db
   eventType:
     snap: 0
     score: 1
 
-  createGame: (db, topic, cb) ->
+  createGame: (topic, cb) ->
+    if !db?
+      cb(null)
+      return
     db('games')
     .returning('id')
     .insert
@@ -12,11 +24,15 @@ module.exports =
     .then (ans)->
       cb(ans[0])
 
-  stopGame: (db, index) ->
+  stopGame: (index) ->
+    return if !db?
     if index?
       db('games').where('id', index).update({ ended_at: db.raw('now()') }).exec()
 
-  addWordSubmission: (db, game_id, uuid, word, cb) ->
+  addWordSubmission: (game_id, uuid, word, cb) ->
+    if !db?
+      cb(null)
+      return
     return if !game_id?
     db('word_submissions')
     .returning('id')
@@ -27,7 +43,8 @@ module.exports =
     .then (ans) ->
       cb ans[0]
 
-  addEvent: (db, game_id, word_index, uuid, params) ->
+  addEvent: (game_id, word_index, uuid, params) ->
+    return if !db?
     return if !game_id?
     return if !params.type?
     params.extra_1 ?= null
