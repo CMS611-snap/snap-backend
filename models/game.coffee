@@ -19,7 +19,7 @@ class Game
       console.log "Starting Game"
       @start = true
       @timerRunning = true
-      @io.sockets.emit "game started"
+      @io.sockets.emit "game started", { gameLength: @gameLength }
       callback = () =>
         @timerRunning = false
         @gameOver()
