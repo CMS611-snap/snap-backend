@@ -61,11 +61,18 @@ $(function() {
   })
 
 
-  var words = [{text:"placeholder", size:100}];
+  var words = [];
 
   socket.on('wordcloud', function(data) {
     console.log('wordcloud ' + JSON.stringify(data));
-    words = data.words;
+    var words = data.words;
+    var multiplier = data.multiplier;
+
+    var wordsListed = '';
+    for (var i = 0; i < words.length; i++) {
+      wordsListed += words[i].text + ': ' + words[i].score + '<br/>'
+    }
+    $('#wordlist').html(wordsListed);
 
     d3.select("#graph").select("svg").remove();
 

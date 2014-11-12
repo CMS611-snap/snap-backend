@@ -78,11 +78,14 @@ io.on('connection', function (socket) {
       player: socket.player.name,
       word: word
     });
+
+    var multiplier = 10;
     var words = game.getWordCounts();
     var wordCounts = [];
     for (countedWord in words) {
       wordCounts.push({text: countedWord,
-                       size: words[countedWord] * 30});
+                       size: words[countedWord] * multiplier,
+                       score: words[countedWord]});
                        //size: Math.sqrt(words[countedWord] * 200)});
     }
 
@@ -90,7 +93,8 @@ io.on('connection', function (socket) {
     // should have moderators join like any player and notify only moderator
     // sockets
     io.sockets.emit('wordcloud', {
-      words: wordCounts
+      words: wordCounts,
+      multiplier: multiplier
     });
   }
 
