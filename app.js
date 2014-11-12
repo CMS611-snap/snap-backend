@@ -38,6 +38,11 @@ app.get('/rpc/words', function(req, res) {
     res.send(game.getWords());
 });
 
+// Returns a list dictionary { word: count, ...}
+app.get('/rpc/wordcounts', function(req, res) {
+    res.send(game.getWordCounts());
+});
+
 app.use('/', express.static(__dirname + '/public'));
 
 ////////////////////////////////////////////////////
