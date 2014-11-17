@@ -26,7 +26,7 @@ var Player = require('./models/player');
 var Game = require('./models/game');
     game = new Game(io, DbHelper, {
         maxScore: 10,
-        maxSeconds: 15
+        maxSeconds: 120
     });
 
 ////////////////////////////////////////////////////
