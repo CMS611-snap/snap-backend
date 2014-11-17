@@ -2,7 +2,9 @@ configs = require('../knexfile.coffee')
 switch process.env.NODE_ENV
   when 'production' then config = configs.production
   when 'dev_db' then config = configs.development
-  else config = null
+  else
+    config = null
+    console.log 'The database could not be reached. Data will not be stored.'
 
 db = if config? then require('knex')(config) else null
 
