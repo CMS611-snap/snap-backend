@@ -17,7 +17,13 @@ module.exports = (app, DbHelper) ->
     DbHelper.db('word_submissions').where({game_id: id})
     .select(DbHelper.db.raw('word, COUNT(word) as frequency'))
     .groupBy('word')
-    .then (content)->
-      res.send JSON.stringify(content)
+    .map (row)->
+      {text: row.word, size: row.frequency * 10}
+    .then (content) ->
+      # res.send JSON.stringify(content)
+      res.render 'game',
+        words: content
+        helpers:
+          json: (val)-> JSON.stringify(val)
     .catch (error) ->
       console.log(error)

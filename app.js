@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 var express = require('express');
+var exphbs = require('express-handlebars');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 8080;
 require("coffee-script/register")
 
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
