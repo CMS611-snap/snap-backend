@@ -5,6 +5,7 @@ class Game
     @gameLength = (endConfig.maxSeconds || 0) * 1000
     if @gameLength == 0
         @gameLength = null
+    @maxWords = endConfig.maxWords || null
     @topic = "default"
     @start = false
     @timer = null
@@ -69,12 +70,25 @@ class Game
       if @isGameOver()
         @gameOver()
 
-  isGameOver: () ->
-    over = false
+
+  reachedMaxScore: () ->
+    if not @maxScore
+      return false
     for p in @players
       if p.score >= @maxScore
-        over = true
-    return over
+        return true
+    return false
+
+  reachedMaxWords: () ->
+    if not @maxWords
+      return false
+    for p in @players
+      if p.words.length < @maxWords
+        return false
+    return true
+
+  isGameOver: () ->
+    return reachedMaxScore() || reachedMaxWords()
 
   winners: () ->
       winners = []
