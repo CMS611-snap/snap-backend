@@ -88,7 +88,7 @@ class Game
     return true
 
   isGameOver: () ->
-    return reachedMaxScore() || reachedMaxWords()
+    @reachedMaxScore() || @reachedMaxWords()
 
   winners: () ->
       winners = []
