@@ -34,6 +34,8 @@ app.get('/rpc/wordcounts', function(req, res) {
     res.send(game.getWordCounts());
 });
 
+require('./pages/games.coffee')(app, DbHelper);
+
 app.use('/', express.static(__dirname + '/public'));
 
 ////////////////////////////////////////////////////
