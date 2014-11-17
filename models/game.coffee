@@ -1,13 +1,14 @@
 class Game
-  constructor: (@io, @DbHelper) ->
+  constructor: (@io, @DbHelper, endConfig) ->
     @players = []
-    @maxScore = 10
-    @gameLength = 120 * 1000
+    @maxScore = endConfig.maxScore || null
+    @gameLength = (endConfig.maxSeconds || 0) * 1000
+    if @gameLength == 0
+        @gameLength = null
+    @maxWords = endConfig.maxWords || null
     @topic = "default"
     @start = false
-    @timer = (ms, func) -> setTimeout func, ms
-    @timerRunning = false
-
+    @timer = null
     @gameId = null
 
   setTopic: (topic) ->
@@ -26,12 +27,11 @@ class Game
       @DbHelper.createGame @topic, (res)=>
         @gameId = res
 
-      @timerRunning = true
       @io.sockets.emit "game started", { gameLength: @gameLength }
-      callback = () =>
-        @timerRunning = false
-        @gameOver()
-      @timer @gameLength, callback    
+      if @gameLength
+          cb = () =>
+              @gameOver()
+          @timer = setTimeout(cb, @gameLength)
     
 
   addPlayer: (newPlayer) ->
@@ -70,12 +70,25 @@ class Game
       if @isGameOver()
         @gameOver()
 
-  isGameOver: () ->
-    over = false
+
+  reachedMaxScore: () ->
+    if not @maxScore
+      return false
     for p in @players
       if p.score >= @maxScore
-        over = true
-    return over
+        return true
+    return false
+
+  reachedMaxWords: () ->
+    if not @maxWords
+      return false
+    for p in @players
+      if p.words.length < @maxWords
+        return false
+    return true
+
+  isGameOver: () ->
+    return reachedMaxScore() || reachedMaxWords()
 
   winners: () ->
       winners = []
@@ -94,8 +107,7 @@ class Game
       winners: @winners()
     @exportData()
     @start = false
-    if @timerRunning
-      clearTimeout(@timer)
+    clearTimeout(@timer)
 
   exportData: () ->
     freq = {}
