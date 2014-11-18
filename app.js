@@ -25,8 +25,9 @@ var Player = require('./models/player');
 
 var Game = require('./models/game');
     game = new Game(io, DbHelper, {
-        maxScore: 10,
-        maxSeconds: 120
+        maxScore: null,
+        maxSeconds: null,
+        maxWords: null
     });
 
 ////////////////////////////////////////////////////
@@ -72,6 +73,10 @@ io.on('connection', function (socket) {
   socket.on('start game', function () {
     game.startGame();
   });
+
+  socket.on('stop game', function () {
+      game.gameOver();
+  });
   
   socket.on('set topic', function(topic) {
     game.setTopic(topic);
@@ -81,8 +86,6 @@ io.on('connection', function (socket) {
     console.log("PLAYER " + playerName);
     var player = new Player(0, socket, game, playerName);
     socket.player = player
-
-    debugger;
 
     game.addPlayer(player);
 

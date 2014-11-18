@@ -43,6 +43,11 @@ class Game
     if not @start
       return
 
+    # TODO(tchajed): debug this, though it seems to only occur when rebooting
+    # server while frontends our still open
+    if not player
+      return
+
     word = word.toLowerCase().trim()
 
     #Reject word if already guessed by player

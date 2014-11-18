@@ -13,6 +13,10 @@ $(function() {
     socket.emit('start game');
   });
 
+  $('#stopGameButton').click(function() {
+    console.log("Stopping Game...");
+    socket.emit('stop game');
+  });
 
 
   $('#joinButton').click(function() {
