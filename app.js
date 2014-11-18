@@ -40,6 +40,26 @@ app.get('/rpc/wordcounts', function(req, res) {
     res.send(game.getWordCounts());
 });
 
+app.get('/rpc/wordcloud', function(req, res) {
+    res.send(wordCloudData());
+});
+
+function wordCloudData() {
+    var multiplier = 10;
+    var words = game.getWordCounts();
+    var wordCounts = [];
+    for (countedWord in words) {
+      wordCounts.push({text: countedWord,
+                       size: words[countedWord] * multiplier,
+                       score: words[countedWord]});
+                       //size: Math.sqrt(words[countedWord] * 200)});
+    }
+    return {
+        words: wordCounts,
+        multiplier: multiplier
+    };
+}
+
 require('./pages/games.coffee')(app, DbHelper);
 
 app.use('/', express.static(__dirname + '/public'));
@@ -83,23 +103,10 @@ io.on('connection', function (socket) {
       word: word
     });
 
-    var multiplier = 10;
-    var words = game.getWordCounts();
-    var wordCounts = [];
-    for (countedWord in words) {
-      wordCounts.push({text: countedWord,
-                       size: words[countedWord] * multiplier,
-                       score: words[countedWord]});
-                       //size: Math.sqrt(words[countedWord] * 200)});
-    }
-
     // TODO(sam): this is a hack to get the moderator interface to work; we
     // should have moderators join like any player and notify only moderator
     // sockets
-    io.sockets.emit('wordcloud', {
-      words: wordCounts,
-      multiplier: multiplier
-    });
+    io.sockets.emit('wordcloud', wordCloudData());
   }
 
   });

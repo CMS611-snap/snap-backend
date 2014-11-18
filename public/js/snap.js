@@ -53,21 +53,23 @@ $(function() {
 
   socket.on('game over', function(data) {
     console.log('game over ' + data);
-    $('#info').append(JSON.stringify(data) + '<br>');
+    $('#info').append("winners: " + data.winners.join(", ") + '<br>');
+    var scores = [];
+    for (var i = 0; i < data.scores.length; i++) {
+        var score = data.scores[i];
+        scores.push(score.player + ": " + score.score);
+    }
+    $('#info').append("scores: " + scores.join(", ") + '<br>');
   });
 
   socket.on('disconnect', function() {
     $('#info').empty();
   })
 
-
   var words = [];
 
-  socket.on('wordcloud', function(data) {
-    console.log('wordcloud ' + JSON.stringify(data));
+  var updateWordCloud = function(data) {
     var words = data.words;
-    var multiplier = data.multiplier;
-
     var wordsListed = '';
     for (var i = 0; i < words.length; i++) {
       wordsListed += words[i].text + ': ' + words[i].score + '<br/>'
@@ -78,9 +80,17 @@ $(function() {
 
     wordcloud.words(words);
     wordcloud.start();
+  }
+
+  socket.on('wordcloud', function(data) {
+    console.log('wordcloud ' + JSON.stringify(data));
+    updateWordCloud(data);
   });
 
-
+  $.get("/rpc/wordcloud", function(data) {
+      console.log('wordcloud ' + JSON.stringify(data));
+      updateWordCloud(data);
+  });
 
 
   var fill = d3.scale.category20();
