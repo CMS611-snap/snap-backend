@@ -19,12 +19,12 @@ class Player
     @words.push(word)
     true
 
-  sendSnap: (word, d_score)->
+  sendSnap: (word, d_score, otherPlayer)->
     @score += d_score
     @snappedWords.push(word)
     console.log @name, @score
     @socket.emit "snap",
-      player:@name
+      player:otherPlayer
       d_score:d_score
       word:word
 

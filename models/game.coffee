@@ -56,15 +56,15 @@ class Game
 
     #Add the submission to db
     @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
-      snapped = false
+      snappedWith = null
       for p in @players
         if p.hasGuessed(word)
-          snapped = true
+          snappedWith = p.name
           if not p.hasSnapped(word)
-            p.sendSnap(word, 1)
+            p.sendSnap(word, 1, player.name)
 
-      if snapped
-        player.sendSnap(word, 1)
+      if snappedWith
+        player.sendSnap(word, 1, snappedWith)
 
         #add the snap event to db
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
