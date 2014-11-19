@@ -109,6 +109,30 @@ class Game
               winners.push p.name
       return winners
 
+  scores: () ->
+    playerScores = []
+    for p in @players
+      playerScores.push
+        player: p.name
+        score: p.score
+      playerScores.sort (a, b) ->
+        scoreDiff = b.score - a.score
+        if scoreDiff != 0
+          return scoreDiff
+        if a.name < b.name
+          return -1
+        if a.name > b.name
+          return 1
+        return 0
+    return playerScores
+
+  sendScores: () ->
+    scores = @scores()
+    for p in @players
+      p.socket.emit "scores",
+        scores: scores
+        myScore: p.score
+
   gameOver: () ->
     @io.sockets.emit "game over",
       scores:({player: p.name, score: p.score} for p in @players)

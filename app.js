@@ -92,6 +92,8 @@ io.on('connection', function (socket) {
     socket.emit('user joined', {
       player: socket.player.name,
     });
+
+    game.sendScores();
   });
 
   // when the client emits 'new message', this listens and executes
@@ -110,6 +112,8 @@ io.on('connection', function (socket) {
     // should have moderators join like any player and notify only moderator
     // sockets
     io.sockets.emit('wordcloud', wordCloudData());
+
+    game.sendScores();
   }
 
   });
