@@ -36,6 +36,9 @@ class Game
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
+    if @start
+      # TODO: indicate how long ago game started
+      newPlayer.socket.emit "game started", { gameLength: @gameLength }
 
   addWord: (player, word) ->
     # if moderator has not started the game
