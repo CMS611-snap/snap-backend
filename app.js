@@ -112,8 +112,6 @@ io.on('connection', function (socket) {
     // should have moderators join like any player and notify only moderator
     // sockets
     io.sockets.emit('wordcloud', wordCloudData());
-
-    game.sendScores();
   }
 
   });

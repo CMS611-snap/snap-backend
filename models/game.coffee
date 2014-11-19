@@ -75,6 +75,8 @@ class Game
 
       player.addWord(word)
 
+      @sendScores()
+
       if @isGameOver()
         @gameOver()
 
