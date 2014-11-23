@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "coffee app.coffee"
   },
   "dependencies": {
     "bcrypt": "^0.8.0",
@@ -32,5 +32,5 @@
     "socket.io-client": "^1.2.0",
     "yamljs": "^0.2.1"
   },
-  "main": "app.js"
+  "main": "app.coffee"
 }
