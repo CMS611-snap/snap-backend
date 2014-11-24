@@ -88,6 +88,10 @@ io.on 'connection', (socket) ->
   # when the client emits 'new message', this listens and executes
   socket.on 'new word', (word) ->
 
+    if !socket.player
+      console.error("word " + word + " from unknown player")
+      return
+
     game.addWord(socket.player, word)
    
     if (game.start)
