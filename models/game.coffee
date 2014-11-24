@@ -18,9 +18,9 @@ class Game
       @topic = topic
       @io.sockets.emit "new topic", @topic
 
-  sendGameStarted: () ->
+  sendGameStarted: (socket) ->
       elapsed = Date.now() - @startTime
-      @io.sockets.emit "game started",
+      socket.emit "game started",
           gameLength: @gameLength
           elapsed: elapsed
           players: (player.name for player in @players)
@@ -35,7 +35,7 @@ class Game
       @DbHelper.createGame @topic, (res)=>
         @gameId = res
 
-      @sendGameStarted()
+      @sendGameStarted(@io.sockets)
       if @gameLength
           cb = () =>
               @gameOver()
@@ -45,7 +45,7 @@ class Game
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
     if @start
-      @sendGameStarted()
+      @sendGameStarted(newPlayer.socket)
 
   addWord: (player, word) ->
     # if moderator has not started the game
