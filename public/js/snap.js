@@ -35,8 +35,9 @@ $(function() {
     $('#info').append('TOPIC is : ' + JSON.stringify(topic) + '<br>');
   });
 
-  socket.on('game started', function(){
+  socket.on('game started', function(info) {
     console.log('game started');
+    console.log(info);
     $('#info').append('<br>' + 'GAME STARTED!!' + '<br>');
   });
 

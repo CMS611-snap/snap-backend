@@ -91,17 +91,20 @@ TODO: send only to the moderator to make this more efficient.
         "<topic>"
 
 ### game started
-        {gameLength: <game length in milliseconds>}
+        {gameLength: <game length in milliseconds, or 0 for no time limit>,
+         elapsed: <elapsed time in milliseconds>,
+         players: ["<name>"...]}
 
 Sent when game is started (moderator sends `start game`) and when a player
 joins if the game has already started.
 
-TODO: send how long the game has been running for the second case (a late
-join).
-
 TODO: send what the game ending conditions are when relevant (eg, no need to
 display the timer if the game is untimed, while knowing the maximum number of
 words is useful).
+
+TODO: The list of players likely includes extra players that have disconnected
+permanently. We should remove those players while still potentially allowing
+for temporary disconnects from players still in the game.
 
 ### scores
         {scores: [{player: "<name>", score: score}...],

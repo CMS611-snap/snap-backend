@@ -8,6 +8,7 @@ class Game
     @maxWords = endConfig.maxWords || null
     @topic = "default"
     @start = false
+    @startTime = null
     @timer = null
     @gameId = null
 
@@ -16,6 +17,13 @@ class Game
       console.log "Setting Topic to: " + topic
       @topic = topic
       @io.sockets.emit "new topic", @topic
+
+  sendGameStarted: () ->
+      elapsed = Date.now() - @startTime
+      @io.sockets.emit "game started",
+          gameLength: @gameLength
+          elapsed: elapsed
+          players: (player.name for player in @players)
 
   startGame: () ->
     if not @start
@@ -27,7 +35,7 @@ class Game
       @DbHelper.createGame @topic, (res)=>
         @gameId = res
 
-      @io.sockets.emit "game started", { gameLength: @gameLength }
+      @sendGameStarted()
       if @gameLength
           cb = () =>
               @gameOver()
@@ -37,8 +45,7 @@ class Game
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
     if @start
-      # TODO: indicate how long ago game started
-      newPlayer.socket.emit "game started", { gameLength: @gameLength }
+      @sendGameStarted()
 
   addWord: (player, word) ->
     # if moderator has not started the game
