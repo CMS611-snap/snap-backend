@@ -1,7 +1,8 @@
 io = require('socket.io-client')
 
-url = process.env.TEST_TARGET || 'https://snap-backend-dev.herokuapp.com'
+url = process.env.TEST_TARGET || 'http://localhost:8080' #'https://snap-backend-dev.herokuapp.com'
 
+users = process.env.USERS || 50
 
 randWord = (len) ->
   Math.random().toString(36).substr(2, len)
@@ -25,6 +26,6 @@ startPlayer = () ->
       ,1000 + Math.random()*500
     ,Math.random()*2000
 
-for a in [0..70]
+for a in [0..users]
   startPlayer()
   # console.log randWord(2)

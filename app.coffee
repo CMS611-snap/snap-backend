@@ -1,4 +1,10 @@
 #!/usr/bin/env coffee
+if process.env.NODETIME_ACCOUNT_KEY
+  require('nodetime').profile
+    accountKey: process.env.NODETIME_ACCOUNT_KEY
+    appName: 'Snap backend'
+
+
 express = require('express')
 exphbs = require('express-handlebars')
 app = express()
