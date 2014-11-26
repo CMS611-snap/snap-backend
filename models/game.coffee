@@ -12,11 +12,13 @@ class Game
     @timer = null
     @gameId = null
 
-  setTopic: (topic) ->
-    if not @start
-      console.log "Setting Topic to: " + topic
-      @topic = topic
-      @io.sockets.emit "new topic", @topic
+  # Deprecated - not needed anymore
+  #
+  # setTopic: (topic) ->
+  #   if not @start
+  #     console.log "Setting Topic to: " + topic
+  #     @topic = topic
+  #     @io.sockets.emit "new topic", @topic
 
   sendGameStarted: (socket) ->
       elapsed = Date.now() - @startTime
@@ -24,6 +26,7 @@ class Game
           gameLength: @gameLength
           elapsed: elapsed
           players: (player.name for player in @players)
+          topic: @topic
 
   startGame: () ->
     if not @start
