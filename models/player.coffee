@@ -29,7 +29,7 @@ class Player
   sendSnap: (word, d_score, otherPlayer)->
     @score += d_score
     @words[word] = WordStatus.snapped
-    console.log @name, @score
+    console.log "#{@name}: #{@score}"
     @socket.emit "snap",
       player:otherPlayer
       d_score:d_score
