@@ -4,7 +4,6 @@ if process.env.NODETIME_ACCOUNT_KEY
     accountKey: process.env.NODETIME_ACCOUNT_KEY
     appName: 'Snap backend'
 
-
 express = require('express')
 exphbs = require('express-handlebars')
 app = express()
@@ -15,6 +14,10 @@ require("coffee-script/register")
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
+
+if process.env.NO_LOGS? and process.env.NO_LOGS
+  console = {}
+  console.log = () ->
 
 server.listen port, ()->
   console.log('Server listening at port %d', port)
