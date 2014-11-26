@@ -154,7 +154,7 @@ class Game
   exportData: () ->
     freq = {}
     for p in @players
-      for word in p.words
+      for word of p.words
         if word in freq
           freq[word] += 1
         else
@@ -176,14 +176,12 @@ class Game
   resetGame: () ->
     console.log '... resetting game ...'
     for p in @players
-      p.words = []
-      p.snappedWords = []
-      p.score = 0
+      p.reset()
 
   getWordCounts: () ->
     counts = {}
     for player in @players
-      for word in player.words
+      for word of player.words
         if word of counts
           counts[word] += 1
         else
@@ -191,10 +189,10 @@ class Game
     return counts
 
   getWords: () ->
-      words = []
-      for player in @players
-          for word in player.words
-              words.push word
-      return words
+    words = []
+    for player in @players
+      for word of player.words
+        words.push word
+    return words
 
 module.exports = Game

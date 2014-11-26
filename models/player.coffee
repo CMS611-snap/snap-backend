@@ -1,32 +1,44 @@
 UuidLib = require 'node-uuid'
 
+WordStatus =
+  guessed: 1
+  snapped: 2
+
 class Player
   constructor: (@id, @socket, @game,  @name = "") ->
-    @words = []
-    @snappedWords = []
+    @words = {}
+    @word_count = 0
+    # @words = []
+    # @snappedWords = []
     @score = 0
     @uuid = UuidLib.v4()
 
 
   hasGuessed: (word) ->
-    word in @words
+    @words[word]?
 
   hasSnapped: (word) ->
-    word in @snappedWords
+    @words[word]? and @words[word] == WordStatus.snapped
 
   addWord: (word) ->
     return false if @hasGuessed(word)
-    @words.push(word)
+    @words[word] = WordStatus.guessed
+    @word_count += 1
     true
 
   sendSnap: (word, d_score, otherPlayer)->
     @score += d_score
-    @snappedWords.push(word)
+    @words[word] = WordStatus.snapped
     console.log @name, @score
     @socket.emit "snap",
       player:otherPlayer
       d_score:d_score
       word:word
+
+  reset: () ->
+    @words = {}
+    @word_count = 0
+    @score = 0
 
 
 module.exports = Player
