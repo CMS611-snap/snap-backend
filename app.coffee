@@ -16,7 +16,6 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
 
 if process.env.NO_LOGS? and process.env.NO_LOGS
-  console = {}
   console.log = () ->
 
 server.listen port, ()->
