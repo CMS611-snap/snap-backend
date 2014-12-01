@@ -1,40 +1,36 @@
-<div id='graph'></div>
+<canvas id='graph'></canvas>
 <script>
 // TODO: refactor this ugly inline script
 $(function() {
-  var fill = d3.scale.category20();
+  setTimeout(function(){ location.reload(); }, 10000);
+
+  w = $(window).innerWidth();
+  h = $(window).innerHeight();
+
+  $('#graph')[0].width = w;
+  $('#graph')[0].height = h;
+
+  console.log(w);
 
   words = {{{json words}}}
 
-  var wordcloud = d3.layout.cloud()
-      .size([500, 500])
-      .words(words)
-      .padding(5)
-      .rotate(function() { return 0; })//~~(Math.random() * 2) * 90; })
-      .font("Impact")
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
+  words = words.map(function(elem) {
+    return [elem.text, elem.size*2]
+  });
 
+  words.sort(function(a, b) { return (b[1] - a[1]) });
 
-  function draw(words) {
-    d3.select("#graph").append("svg")
-        .attr("width", 500)
-        .attr("height", 500)
-      .append("g")
-        .attr("transform", "translate(150,150)")
-      .selectAll("text")
-        .data(words)
-      .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-        .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.text; });
-  }
+  // words = words.concat(words)
+
+  WordCloud(document.getElementById('graph'), { 
+    list: words,
+    minRotation: -0.3,
+    maxRotation: 0.3,
+    rotateRatio: 0.3,
+    shuffle: true
+    // shape: 'square'
+    } );
+
   // console.log ('starting');
   // wordcloud.start();
 });
