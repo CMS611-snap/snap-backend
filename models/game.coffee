@@ -175,6 +175,7 @@ class Game
 
   resetGame: () ->
     console.log '... resetting game ...'
+    @players = @players.filter (p) -> p.connected
     for p in @players
       p.reset()
 

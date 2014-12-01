@@ -12,6 +12,7 @@ class Player
     # @snappedWords = []
     @score = 0
     @uuid = UuidLib.v4()
+    @connected = true
 
 
   hasGuessed: (word) ->

@@ -118,7 +118,8 @@ io.on 'connection', (socket) ->
 
   # when the user disconnects.. perform this
   socket.on 'disconnect', () ->
-    #############################
-    # REMOVE PLAYER FROM GAME
+    # console.log "Closed."
+    # console.log socket
+    socket.player.connected = false
 
 module.exports = app
