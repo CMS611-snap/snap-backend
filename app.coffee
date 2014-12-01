@@ -84,6 +84,9 @@ io.on 'connection', (socket) ->
   socket.on 'new player', (playerName) ->
     console.log("PLAYER " + playerName)
     player = new Player(0, socket, game, playerName)
+
+    DbHelper.addPlayer playerName, player.uuid
+
     socket.player = player
 
     game.addPlayer(player)

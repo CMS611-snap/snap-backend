@@ -61,3 +61,10 @@ module.exports =
       extra_2: params.extra_2
     .exec()
 
+  addPlayer: (name, uuid) ->
+    return if !db?
+    db('users').insert
+      uuid: uuid
+      name: name
+    .exec()
+
