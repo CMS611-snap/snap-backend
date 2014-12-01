@@ -118,6 +118,7 @@ io.on 'connection', (socket) ->
 
   # when the user disconnects.. perform this
   socket.on 'disconnect', () ->
+    return if !socket? or !socket.player?
     # console.log "Closed."
     # console.log socket
     socket.player.connected = false
