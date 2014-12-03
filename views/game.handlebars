@@ -1,10 +1,37 @@
+<style>
+/* Yes, I know that inline css smells */
+
+body {
+  overflow: hidden;
+}
+
+#wordlist {
+  position:fixed;
+  width:25%;
+  height:90%;
+  right: 3%;
+  top:5%;
+  overflow-y:scroll;
+
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+#wordlist table {
+  width: 100%;
+}
+
+</style>
+
 <canvas id='graph'></canvas>
+<div id='wordlist'></div>
 <script>
 // TODO: refactor this ugly inline script
 $(function() {
   setTimeout(function(){ location.reload(); }, 10000);
 
-  w = $(window).innerWidth();
+  w = $(window).innerWidth() * 0.72;
   h = $(window).innerHeight();
 
   $('#graph')[0].width = w;
@@ -27,11 +54,17 @@ $(function() {
     minRotation: -0.3,
     maxRotation: 0.3,
     rotateRatio: 0.3,
-    shuffle: true
+    shuffle: true,
+    fontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
     // shape: 'square'
     } );
 
-  // console.log ('starting');
-  // wordcloud.start();
+  var word_list = '<table>'
+  for (var i = 0; i < words.length; i++) {
+    word_list += '<tr><td>'+words[i][0]+'</td><td>'+words[i][1]/10+'</td></tr>';
+  }
+  word_list += '</table>'
+
+  $('#wordlist').html(word_list);
 });
 </script> 
