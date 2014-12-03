@@ -1,4 +1,6 @@
 #!/usr/bin/env coffee
+# vim: ts=2:sw=2
+
 if process.env.NODETIME_ACCOUNT_KEY
   require('nodetime').profile
     accountKey: process.env.NODETIME_ACCOUNT_KEY
@@ -6,7 +8,9 @@ if process.env.NODETIME_ACCOUNT_KEY
 
 express = require('express')
 exphbs = require('express-handlebars')
+bodyParser = require('body-parser')
 app = express()
+
 server = require('http').createServer(app)
 io = require('socket.io')(server)
 port = process.env.PORT || 8080
@@ -14,6 +18,9 @@ require("coffee-script/register")
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
+app.use bodyParser.json()
+app.use bodyParser.urlencoded
+    extended: true
 
 if process.env.NO_LOGS? and process.env.NO_LOGS
   console.log = () ->
@@ -31,10 +38,7 @@ DbHelper = require('./helpers/db_helper')
 Player = require('./models/player')
 
 Game = require('./models/game')
-game = new Game io, DbHelper,
-    maxScore: null,
-    maxSeconds: null,
-    maxWords: null
+game = new Game io, DbHelper
 
 ################################################
 # RPC methods
@@ -48,6 +52,11 @@ app.get '/rpc/wordcounts', (req, res) ->
 app.get '/rpc/wordcloud', (req, res) ->
   res.send(wordCloudData())
 
+app.get '/rpc/setup/endConfig', (req, res) ->
+  res.send(game.endConfig)
+
+app.post '/rpc/setup/endConfig', (req, res) ->
+  game.setEndConfig req.body
 wordCloudData = () ->
   multiplier = 10
   words = game.getWordCounts()

@@ -97,6 +97,30 @@ $(function() {
       updateWordCloud(data);
   });
 
+  $.get('/rpc/setup/endConfig', function(data) {
+      function isPresent(val) {
+          return (val && val != 0 && !isNaN(val));
+      }
+      if (isPresent(data.maxSeconds)) {
+          $("#endTime").val(data.maxSeconds);
+      }
+      if (isPresent(data.maxScore)) {
+          $("#endScore").val(data.maxScore);
+      }
+      if (isPresent(data.maxWords)) {
+          $("#endWords").val(data.maxWords);
+      }
+  });
+
+  $("#endForm").submit(function() {
+      $.post("/rpc/setup/endConfig", {
+          "maxSeconds": parseInt($("#endTime").val()),
+          "maxScore": parseInt($("#endScore").val()),
+          "maxWords": parseInt($("#endWords").val())
+      });
+      return false;
+  });
+
 
   var fill = d3.scale.category20();
 

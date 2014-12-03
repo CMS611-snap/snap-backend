@@ -1,16 +1,30 @@
+# vim: ts=2:sw=2
 class Game
-  constructor: (@io, @DbHelper, endConfig) ->
+  constructor: (@io, @DbHelper) ->
     @players = []
-    @maxScore = endConfig.maxScore || null
-    @gameLength = (endConfig.maxSeconds || 0) * 1000
-    if @gameLength == 0
-        @gameLength = null
-    @maxWords = endConfig.maxWords || null
     @topic = "default"
     @start = false
+    @setEndConfig
+      maxScore: null
+      maxSeconds: null
+      maxWords: null
     @startTime = null
     @timer = null
     @gameId = null
+
+  setEndConfig: (endConfig) ->
+    @endConfig = endConfig
+    parseNum = (num) ->
+      if num && num != 0 && !isNaN(num)
+        return num
+      return null
+    @maxScore = parseNum(endConfig.maxScore)
+    gameLengthSeconds = parseNum(endConfig.maxSeconds)
+    if gameLengthSeconds
+      @gameLength = gameLengthSeconds * 1000
+    else
+      @gameLength = null
+    @maxWords = parseNum(endConfig.maxWords)
 
   setTopic: (topic) ->
     if not @start
@@ -38,6 +52,7 @@ class Game
 
       @sendGameStarted(@io.sockets)
       if @gameLength
+          console.log "starting timer for #{@gameLength/1000}"
           cb = () =>
               @gameOver()
           @timer = setTimeout(cb, @gameLength)
@@ -144,6 +159,7 @@ class Game
         myScore: p.score
 
   gameOver: () ->
+    console.log "Ending game"
     @io.sockets.emit "game over",
       scores:({player: p.name, score: p.score} for p in @players)
       winners: @winners()
