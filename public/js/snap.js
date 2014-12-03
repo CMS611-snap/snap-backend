@@ -112,14 +112,41 @@ $(function() {
       }
   });
 
-  $("#endForm").submit(function() {
-      $.post("/rpc/setup/endConfig", {
-          "maxSeconds": parseInt($("#endTime").val()),
-          "maxScore": parseInt($("#endScore").val()),
-          "maxWords": parseInt($("#endWords").val())
-      });
-      return false;
+  $.get('/rpc/setup/metadata', function(data) {
+      $("#facilitator").val(data.facilitator || "");
+      $("#event").val(data.event || "");
+      if (data.numPlayers && data.numPlayers !== 0) {
+          $("#numPlayers").val(data.numPlayers.toString());
+      }
   });
+
+  (function() {
+      function parseNumber(selector) {
+          var number = parseInt($(selector).val());
+          if (isNaN(number)) {
+              return 0;
+          }
+          return val;
+      }
+
+      $("#endForm").submit(function() {
+          $.post("/rpc/setup/endConfig", {
+              "maxSeconds": parseNumber("#endTime"),
+              "maxScore": parseNumber("#endScore"),
+              "maxWords": parseNumber("#endWords")
+          });
+          return false;
+      });
+
+      $("#metadataForm").submit(function() {
+          $.post("/rpc/setup/metadata", {
+              "facilitator": $("#facilitator").val(),
+              "event": $("#event").val(),
+              "numPlayers": parseNumber("#numPlayers")
+          });
+          return false;
+      });
+  })()
 
 
   var fill = d3.scale.category20();

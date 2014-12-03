@@ -57,6 +57,13 @@ app.get '/rpc/setup/endConfig', (req, res) ->
 
 app.post '/rpc/setup/endConfig', (req, res) ->
   game.setEndConfig req.body
+
+app.get '/rpc/setup/metadata', (req, res) ->
+  res.send(game.metadata)
+
+app.post '/rpc/setup/metadata', (req, res) ->
+  game.metadata = req.body
+
 wordCloudData = () ->
   multiplier = 10
   words = game.getWordCounts()

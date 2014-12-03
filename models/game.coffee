@@ -8,6 +8,11 @@ class Game
       maxScore: null
       maxSeconds: null
       maxWords: null
+    @metadata =
+      facilitator: null
+      location: null
+      event: null
+      num_people: null
     @startTime = null
     @timer = null
     @gameId = null
@@ -47,7 +52,7 @@ class Game
       @startTime = Date.now()
 
       # insert the game to db
-      @DbHelper.createGame @topic, (res)=>
+      @DbHelper.createGame @topic, @metadata, (res)=>
         @gameId = res
 
       @sendGameStarted(@io.sockets)

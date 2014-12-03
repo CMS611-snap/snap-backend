@@ -14,7 +14,7 @@ module.exports =
     snap: 0
     score: 1
 
-  createGame: (topic, cb) ->
+  createGame: (topic, metadata, cb) ->
     if !db?
       cb(null)
       return
@@ -23,6 +23,9 @@ module.exports =
     .insert
       started_at: db.raw('now()')
       topic: topic
+      facilitator: metadata.facilitator
+      event: metadata.event
+      num_players: metadata.numPlayers
     .then (ans)->
       cb(ans[0])
 
