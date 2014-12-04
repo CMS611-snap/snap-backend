@@ -41,28 +41,21 @@ $(function() {
     $('#info').append('<br>' + 'GAME STARTED!!' + '<br>');
   });
 
-  socket.on('user joined', function(data) {
-    console.log('user joined: ' + data);
-    $('#info').append(JSON.stringify(data) + '<br>');
-  });
-
   socket.on('snap', function(data) {
     console.log('snap ' + data);
     $('#info').append(JSON.stringify(data) + '<br>');
   });
 
-  socket.on('new word', function(data) {
-    console.log('new word ' + data);
-    $('#info').append(JSON.stringify(data) + '<br>');
-  });
-
   socket.on('game over', function(data) {
     console.log('game over ' + data);
-    $('#info').append("winners: " + data.winners.join(", ") + '<br>');
+    winnerNames = data.winners.map(function(p) {
+        return p.name;
+    });
+    $('#info').append("GAME OVER: winners: " + winnerNames.join(", ") + '<br>');
     var scores = [];
     for (var i = 0; i < data.scores.length; i++) {
         var score = data.scores[i];
-        scores.push(score.player + ": " + score.score);
+        scores.push(score.player.name + ": " + score.score);
     }
     $('#info').append("scores: " + scores.join(", ") + '<br>');
   });
