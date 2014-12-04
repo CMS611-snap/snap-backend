@@ -16,6 +16,7 @@ class Game
     @startTime = null
     @timer = null
     @gameId = null
+    @_sendScoreInterval = null
 
   setEndConfig: (endConfig) ->
     @endConfig = endConfig
@@ -63,7 +64,10 @@ class Game
           cb = () =>
               @gameOver()
           @timer = setTimeout(cb, @gameLength)
-    
+
+      @_sendScoreInterval = setInterval () =>
+        @sendScores()
+      , 2000
 
   addPlayer: (newPlayer) ->
     @players.push(newPlayer)
@@ -111,8 +115,6 @@ class Game
 
 
       player.addWord(word)
-
-      @sendScores()
 
       if @isGameOver()
         @gameOver()
@@ -167,10 +169,8 @@ class Game
 
   sendScores: () ->
     scores = @scores()
-    for p in @players
-      p.socket.emit "scores",
-        scores: scores
-        myScore: p.score
+    @io.sockets.emit "scores",
+      scores: @scores()
 
   gameOver: () ->
     console.log "Ending game"
@@ -180,6 +180,7 @@ class Game
     @exportData()
     @start = false
     clearTimeout(@timer)
+    clearInterval(@_sendScoreInterval)
 
   exportData: () ->
     freq = {}
