@@ -98,6 +98,8 @@ io.on 'connection', (socket) ->
     game.setTopic(topic)
 
   socket.on 'new player', (playerName) ->
+    if socket? and socket.player?
+      return
     console.log("PLAYER " + playerName)
     player = new Player(0, socket, game, playerName)
 
