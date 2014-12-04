@@ -41,6 +41,8 @@ class Game
       elapsed = Date.now() - @startTime
       socket.emit "game started",
           gameLength: @gameLength
+          maxScore: @maxScore
+          maxWords: @maxWords
           elapsed: elapsed
           players: (player.identifier() for player in @players)
           topic: @topic

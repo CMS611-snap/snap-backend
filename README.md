@@ -92,6 +92,8 @@ TODO: send only to the moderator to make this more efficient.
 
 ### game started
         {gameLength: <game length in milliseconds, or 0 for no time limit>,
+         maxWords: <maximum words, or 0 for no limit>,
+         maxScore: <maximum score, or 0 for no limit>,
          elapsed: <elapsed time in milliseconds>,
          players: ["<name>"...]}
 
