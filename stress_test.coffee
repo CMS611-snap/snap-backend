@@ -1,6 +1,6 @@
 io = require('socket.io-client')
 
-url = process.env.TEST_TARGET || 'http://localhost:8080' #'https://snap-backend-dev.herokuapp.com'
+url = process.env.TEST_TARGET || 'https://snap-backend-dev.herokuapp.com' #'http://localhost:8080'
 
 users = process.env.USERS || 50
 
@@ -9,8 +9,8 @@ randWord = (len) ->
 
 
 
-startPlayer = () ->
-  name = process.env.TEST_NAME || 'John Smith'
+startPlayer = (name) ->
+  name = name || process.env.TEST_NAME || 'John Smith'
 
   socket = io(url)
 
@@ -22,10 +22,12 @@ startPlayer = () ->
       console.log "connected a test player #{name}"
 
       setInterval () ->
-        socket.emit 'new word', randWord(2)
-      ,1000 + Math.random()*500
+        w = randWord(2)
+        socket.emit 'new word', w
+        console.log "#{name} wrote: #{w}"
+      ,10000000000 + Math.random()*500
     ,Math.random()*2000
 
 for a in [0..users]
-  startPlayer()
+  startPlayer("player #{a}")
   # console.log randWord(2)
