@@ -132,7 +132,7 @@ io.on 'connection', (socket) ->
     # TODO(sam): this is a hack to get the moderator interface to work we
     # should have moderators join like any player and notify only moderator
     # sockets
-    io.sockets.emit('wordcloud', wordCloudData())
+    #io.sockets.emit('wordcloud', wordCloudData())
 
   # when the user disconnects.. perform this
   socket.on 'disconnect', () ->
