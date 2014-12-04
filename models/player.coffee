@@ -14,6 +14,8 @@ class Player
     @uuid = UuidLib.v4()
     @connected = true
 
+  identifier: ()->
+    {name: @name, uuid: @uuid}
 
   hasGuessed: (word) ->
     @words[word]?

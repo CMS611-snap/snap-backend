@@ -42,7 +42,7 @@ class Game
       socket.emit "game started",
           gameLength: @gameLength
           elapsed: elapsed
-          players: (player.name for player in @players)
+          players: (player.identifier() for player in @players)
           topic: @topic
 
   startGame: () ->
@@ -98,7 +98,7 @@ class Game
       if snapped.length > 0
         snapped.push player
 
-        snapped_names = snapped.map (p)-> p.name
+        snapped_names = snapped.map (p)-> p.identifier()
 
         for p in snapped
           if not p.hasSnapped(word)
@@ -139,26 +139,26 @@ class Game
       winners = []
       maxScore = 0
       for p in @players
-          if p.score > maxScore
-              winners = []
-              maxScore = p.score
-          if p.score == maxScore
-              winners.push p.name
+        if p.score > maxScore
+          winners = []
+          maxScore = p.score
+        if p.score == maxScore
+          winners.push p.identifier()
       return winners
 
   scores: () ->
     playerScores = []
     for p in @players
       playerScores.push
-        player: p.name
+        player: p.identifier()
         score: p.score
       playerScores.sort (a, b) ->
         scoreDiff = b.score - a.score
         if scoreDiff != 0
           return scoreDiff
-        if a.name < b.name
+        if a.player.name < b.player.name
           return -1
-        if a.name > b.name
+        if a.player.name > b.player.name
           return 1
         return 0
     return playerScores
@@ -173,7 +173,7 @@ class Game
   gameOver: () ->
     console.log "Ending game"
     @io.sockets.emit "game over",
-      scores:({player: p.name, score: p.score} for p in @players)
+      scores: @scores()
       winners: @winners()
     @exportData()
     @start = false
