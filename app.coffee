@@ -124,7 +124,7 @@ io.on 'connection', (socket) ->
     game.addWord(socket.player, word)
    
     if (game.start)
-      console.log("WORD " + word)
+      console.log("WORD #{word} from #{socket.player.name}")
       socket.emit 'new word',
         player: socket.player.name,
         word: word
