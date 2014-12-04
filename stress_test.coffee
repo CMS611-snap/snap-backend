@@ -9,7 +9,7 @@ randWord = (len) ->
   Math.random().toString(36).substr(2, len)
 
 startPlayer = (name) ->
-  socket = io(url)
+  socket = io(url, {multiplex: false})
 
   socket.on 'connect', ()->
     setTimeout () ->
