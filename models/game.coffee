@@ -17,6 +17,7 @@ class Game
     @timer = null
     @gameId = null
     @_sendScoreInterval = null
+    @snapHistory = []
 
   setEndConfig: (endConfig) ->
     @endConfig = endConfig
@@ -106,6 +107,10 @@ class Game
 
         snapped_names = snapped.map (p)-> p.identifier()
 
+        @snapHistory.push
+          players: snapped_names
+          word: word
+
         for p in snapped
           if not p.hasSnapped(word)
             p.sendSnap(word, 1, snapped_names)
@@ -171,6 +176,9 @@ class Game
     scores = @scores()
     @io.sockets.emit "scores",
       scores: @scores()
+      snaps: @snapHistory
+
+    @snapHistory = []
 
   gameOver: () ->
     console.log "Ending game"
