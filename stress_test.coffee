@@ -10,10 +10,7 @@ randWord = (len) ->
 
 
 startPlayer = (name) ->
-  name = name || process.env.TEST_NAME || 'John Smith'
-
   socket = io(url)
-
 
   socket.on 'connect', ()->
     setTimeout () ->
@@ -24,10 +21,10 @@ startPlayer = (name) ->
       setInterval () ->
         w = randWord(2)
         socket.emit 'new word', w
-        console.log "#{name} wrote: #{w}"
-      ,10000000000 + Math.random()*500
-    ,Math.random()*2000
+        #console.log "#{name} wrote: #{w}"
+      , 1000
+    , Math.random()*2000
 
 for a in [0..users]
-  startPlayer("player #{a}")
+  startPlayer(process.env.TEST_NAME || "player #{a}")
   # console.log randWord(2)
