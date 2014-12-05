@@ -78,22 +78,27 @@ class Game
     if @start
       @sendGameStarted(newPlayer.socket)
 
-  addWord: (player, word) ->
+  # cb will be passed error, snap, where snap is the same format as the 'snap'
+  # socket event
+  addWord: (player, word, cb) ->
     # if moderator has not started the game
     # nobody can submit any words
     if not @start
-      return "game not started"
+      cb("game not started", null)
+      return
 
     # TODO(tchajed): debug this, though it seems to only occur when rebooting
     # server while frontends our still open
     if not player
-      return "no player"
+      cb("no player", null)
+      return
 
     word = word.toLowerCase().trim()
 
     #Reject word if already guessed by player
     if player.hasGuessed(word)
-      return "duplicate"
+      cb("duplicate", null)
+      return
 
     #Add the submission to db
     @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
@@ -102,9 +107,10 @@ class Game
         if p.hasGuessed(word)
           snapped.push p
 
+      playerSnap = null
+
       if snapped.length > 0
         snapped.push player
-
         snapped_names = snapped.map (p)-> p.identifier()
 
         @snapHistory.push
@@ -113,18 +119,18 @@ class Game
 
         for p in snapped
           if p.uuid == player.uuid
-            p.sendSnap(word, snapped.length - 1, snapped_names)
+            playerSnap = p.snapEvent(word, snapped.length - 1, snapped_names)
           else
-            p.sendSnap(word, 1, [player.identifier()])
+            event = p.snapEvent word, 1, [player.identifier()]
+            p.sendSnap event
 
         #add the snap event to db
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
       player.addWord(word)
-
       if @isGameOver()
         @gameOver()
-    return null
+      cb(null, playerSnap)
 
   reachedMaxScore: () ->
     if not @maxScore

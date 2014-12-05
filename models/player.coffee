@@ -29,14 +29,19 @@ class Player
     @word_count += 1
     true
 
-  sendSnap: (word, d_score, otherPlayer)->
+  snapEvent: (word, d_score, otherPlayer) ->
     @score += d_score
     @words[word] = WordStatus.snapped
     console.log "#{@name}: #{@score}"
-    @socket.emit "snap",
-      player:otherPlayer
-      d_score:d_score
-      word:word
+    return {
+      player: otherPlayer
+      d_score: d_score
+      word: word
+    }
+
+  # snap should be the return value of snapEvent
+  sendSnap: (snap) ->
+    @socket.emit "snap", snap
 
   reset: () ->
     @words = {}

@@ -125,20 +125,16 @@ io.on 'connection', (socket) ->
       cb
         success: false
         error: "unknown player"
+        snap: null
       return
 
-    error = game.addWord(socket.player, word)
-    if !error?
-      console.log("WORD #{word} from #{socket.player.name}")
-
-    cb
-      success: !error?
-      error: error
-
-    # TODO(sam): this is a hack to get the moderator interface to work we
-    # should have moderators join like any player and notify only moderator
-    # sockets
-    #io.sockets.emit('wordcloud', wordCloudData())
+    error = game.addWord socket.player, word, (error, snap) ->
+      if !error?
+        console.log("WORD #{word} from #{socket.player.name}")
+      cb
+        success: !error?
+        error: error
+        snap: snap
 
   # when the user disconnects.. perform this
   socket.on 'disconnect', () ->
