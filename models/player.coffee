@@ -23,7 +23,7 @@ class Player
   hasSnapped: (word) ->
     @words[word]? and @words[word] == WordStatus.snapped
 
-  addWord: (word) ->
+  addWord: (word) =>
     return false if @hasGuessed(word)
     @words[word] = WordStatus.guessed
     @word_count += 1

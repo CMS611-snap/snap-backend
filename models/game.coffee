@@ -22,6 +22,7 @@ class Game
   setEndConfig: (endConfig) ->
     @endConfig = endConfig
     parseNum = (num) ->
+      num = parseInt(num)
       if num && num != 0 && !isNaN(num)
         return num
       return null
@@ -32,6 +33,7 @@ class Game
     else
       @gameLength = null
     @maxWords = parseNum(endConfig.maxWords)
+    console.log "End conditions: score: #{@maxScore} length: #{@gameLength} words: #{@maxWords}"
 
   setTopic: (topic) ->
     if not @start
@@ -47,7 +49,7 @@ class Game
           maxScore: @maxScore
           maxWords: @maxWords
           elapsed: elapsed
-          players: (player.identifier() for player in @players)
+          players: (player.identifier() for player in @players when player.connected)
           topic: @topic
 
   startGame: () =>
@@ -128,7 +130,7 @@ class Game
   reachedMaxScore: () ->
     if not @maxScore
       return false
-    for p in @players
+    for p in @players when p.connected
       if p.score >= @maxScore
         return true
     return false
@@ -136,8 +138,8 @@ class Game
   reachedMaxWords: () ->
     if not @maxWords
       return false
-    for p in @players
-      if p.words.length < @maxWords
+    for p in @players when p.connected
+      if p.word_count < @maxWords
         return false
     return true
 
