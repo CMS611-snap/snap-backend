@@ -98,10 +98,7 @@ class Game
       for p in @players
         if p.hasGuessed(word)
           snapped.push p
-          # if not p.hasSnapped(word)
-          #   p.sendSnap(word, 1, player.name)
 
-      # console.log snapped
       if snapped.length > 0
         snapped.push player
 
@@ -112,8 +109,10 @@ class Game
           word: word
 
         for p in snapped
-          if not p.hasSnapped(word)
-            p.sendSnap(word, 1, snapped_names)
+          if p.uuid == player.uuid
+            p.sendSnap(word, snapped.length - 1, snapped_names)
+          else
+            p.sendSnap(word, 1, [player.identifier()])
 
         #add the snap event to db
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
