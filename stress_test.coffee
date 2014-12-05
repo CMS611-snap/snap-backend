@@ -5,7 +5,7 @@ url = process.env.TEST_TARGET || 'https://snap-backend-dev.herokuapp.com' #'http
 
 users = process.env.USERS || 50
 
-WORD_CHARS = "abcdefghijklmnopqrstuvwxyz"
+WORD_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789 "
 
 randWord = (len) ->
   word = ""
