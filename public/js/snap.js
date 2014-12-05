@@ -110,10 +110,14 @@ $(function() {
   });
 
   $.get('/rpc/setup/metadata', function(data) {
-      $("#facilitator").val(data.facilitator || "");
-      $("#event").val(data.event || "");
-      if (data.numPlayers && data.numPlayers !== 0) {
-          $("#numPlayers").val(data.numPlayers.toString());
+      var metadata = data.metadata;
+      $("#facilitator").val(metadata.facilitator || "");
+      $("#event").val(metadata.event || "");
+      if (metadata.numPlayers && metadata.numPlayers !== 0) {
+          $("#numPlayers").val(metadata.numPlayers.toString());
+      }
+      if (data.topic) {
+          $("#topic").val(data.topic);
       }
   });
 

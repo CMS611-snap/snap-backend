@@ -60,7 +60,9 @@ app.post '/rpc/setup/endConfig', (req, res) ->
   res.send()
 
 app.get '/rpc/setup/metadata', (req, res) ->
-  res.send(game.metadata)
+  res.send
+    metadata: game.metadata
+    topic: game.topic
 
 app.post '/rpc/setup/metadata', (req, res) ->
   game.metadata = req.body
