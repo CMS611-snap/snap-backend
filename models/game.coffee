@@ -82,18 +82,18 @@ class Game
     # if moderator has not started the game
     # nobody can submit any words
     if not @start
-      return
+      return "game not started"
 
     # TODO(tchajed): debug this, though it seems to only occur when rebooting
     # server while frontends our still open
     if not player
-      return
+      return "no player"
 
     word = word.toLowerCase().trim()
 
     #Reject word if already guessed by player
     if player.hasGuessed(word)
-      return
+      return "duplicate"
 
     #Add the submission to db
     @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
@@ -120,12 +120,11 @@ class Game
         #add the snap event to db
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
-
       player.addWord(word)
 
       if @isGameOver()
         @gameOver()
-
+    return null
 
   reachedMaxScore: () ->
     if not @maxScore

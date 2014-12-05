@@ -119,19 +119,21 @@ io.on 'connection', (socket) ->
     game.sendScores()
 
   # when the client emits 'new message', this listens and executes
-  socket.on 'new word', (word) ->
-
+  socket.on 'new word', (word, cb) ->
     if !socket.player
       console.error("word " + word + " from unknown player")
+      cb
+        success: false
+        error: "unknown player"
       return
 
-    game.addWord(socket.player, word)
-   
-    if (game.start)
+    error = game.addWord(socket.player, word)
+    if !error?
       console.log("WORD #{word} from #{socket.player.name}")
-      socket.emit 'new word',
-        player: socket.player.name,
-        word: word
+
+    cb
+      success: !error?
+      error: error
 
     # TODO(sam): this is a hack to get the moderator interface to work we
     # should have moderators join like any player and notify only moderator
