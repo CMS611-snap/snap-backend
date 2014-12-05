@@ -20,7 +20,8 @@ module.exports = (app, DbHelper) ->
       .select(DbHelper.db.raw('word, COUNT(word) as frequency'))
       .groupBy('word')
       .map (row)->
-        {text: row.word, size: row.frequency * 10}
+         text: row.word
+         frequency: row.frequency
       .then (content) ->
         # res.send JSON.stringify(content)
         res.render 'game',

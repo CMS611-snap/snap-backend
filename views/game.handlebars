@@ -38,26 +38,26 @@ $(function() {
   $('#graph')[0].height = h;
 
   words = {{{json words}}}
+  words.sort(function(a, b) { return (b.frequency - a.frequency) });
 
-  words = words.map(function(elem) {
-    return [elem.text, elem.size]
+  var wordCounts = words.map(function(elem) {
+      return [elem.text, Math.min(elem.frequency, 10)];
   });
 
-  words.sort(function(a, b) { return (b[1] - a[1]) });
 
   WordCloud(document.getElementById('graph'), { 
-    list: words,
+    list: wordCounts,
+    weightFactor: 20,
     minRotation: -0.3,
     maxRotation: 0.3,
     rotateRatio: 0.3,
-    shuffle: true,
     fontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
     // shape: 'square'
     } );
 
   var word_list = '<table>'
   for (var i = 0; i < words.length; i++) {
-    word_list += '<tr><td>'+words[i][0]+'</td><td>'+words[i][1]/10+'</td></tr>';
+    word_list += '<tr><td>'+words[i].text+'</td><td>'+words[i].frequency+'</td></tr>';
   }
   word_list += '</table>'
 
