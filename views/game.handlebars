@@ -29,38 +29,69 @@ body {
 <script>
 // TODO: refactor this ugly inline script
 $(function() {
-  setTimeout(function(){ location.reload(); }, 10000);
-
-  w = $(window).innerWidth() * 0.72;
-  h = $(window).innerHeight();
-
+  var w = $(window).innerWidth() * 0.72;
+  var h = $(window).innerHeight();
   $('#graph')[0].width = w;
   $('#graph')[0].height = h;
 
-  words = {{{json words}}}
-  words.sort(function(a, b) { return (b.frequency - a.frequency) });
+  var ids = {{ids}}
+  function loadWords(cb) {
+    $.get("/rpc/games/" + ids + "/wordcloud", function(words) {
+      words.sort(function(a, b) { return (b.frequency - a.frequency) });
 
-  var wordCounts = words.map(function(elem) {
-      return [elem.text, Math.min(elem.frequency, 10)];
-  });
+      var wordCounts = words.map(function(elem) {
+        return [elem.text, Math.min(elem.frequency, 10)];
+      });
 
-
-  WordCloud(document.getElementById('graph'), { 
-    list: wordCounts,
-    weightFactor: 20,
-    minRotation: -0.3,
-    maxRotation: 0.3,
-    rotateRatio: 0.3,
-    fontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
-    // shape: 'square'
-    } );
-
-  var word_list = '<table>'
-  for (var i = 0; i < words.length; i++) {
-    word_list += '<tr><td>'+words[i].text+'</td><td>'+words[i].frequency+'</td></tr>';
+      cb(words, wordCounts);
+    });
   }
-  word_list += '</table>'
 
-  $('#wordlist').html(word_list);
+  function renderWordCloud(wordCounts) {
+    WordCloud(document.getElementById('graph'), {
+      list: wordCounts,
+      weightFactor: 20,
+      minRotation: -0.3,
+      maxRotation: 0.3,
+      rotateRatio: 0.3,
+      fontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
+        // shape: 'square'
+    });
+  }
+
+  function renderWordTable(words) {
+    var word_list = '<table>'
+      for (var i = 0; i < words.length; i++) {
+        word_list += '<tr><td>'+words[i].text+'</td><td>'+words[i].frequency+'</td></tr>';
+      }
+    word_list += '</table>';
+
+    $('#wordlist').html(word_list);
+  }
+
+  // Determine if the counts have changed by checking the total number of
+  // words.
+  var prevWords = 0;
+  function didCountsChange(words) {
+    var total = 0;
+    for (var i = 0; i < words.length; i++) {
+      total += words[i].frequency;
+    }
+    var didChange = (total != prevWords);
+    prevWords = total;
+    return didChange;
+  }
+
+  function refresh() {
+    loadWords(function(words, wordCounts) {
+      if (didCountsChange(words)) {
+        renderWordTable(words);
+        renderWordCloud(wordCounts);
+      }
+    });
+  }
+
+  refresh();
+  setInterval(refresh, 10000);
 });
 </script> 

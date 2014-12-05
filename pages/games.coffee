@@ -14,7 +14,7 @@ module.exports = (app, DbHelper) ->
       .catch (error) ->
         console.log(error)
 
-    app.get '/admin/games/:ids', (req, res) ->
+    app.get '/rpc/games/:ids/wordcloud', (req, res) ->
       ids = req.params.ids.split(',').map (e)->(parseInt e)
       DbHelper.db('word_submissions').whereIn('game_id', ids)
       .select(DbHelper.db.raw('word, COUNT(word) as frequency'))
@@ -23,10 +23,10 @@ module.exports = (app, DbHelper) ->
          text: row.word
          frequency: row.frequency
       .then (content) ->
-        # res.send JSON.stringify(content)
-        res.render 'game',
-          words: content
-          helpers:
-            json: (val)-> JSON.stringify(val)
+        res.send content
       .catch (error) ->
         console.log(error)
+
+    app.get '/admin/games/:ids', (req, res) ->
+      res.render 'game',
+        ids: req.params.ids
