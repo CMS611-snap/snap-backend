@@ -57,12 +57,14 @@ app.get '/rpc/setup/endConfig', (req, res) ->
 
 app.post '/rpc/setup/endConfig', (req, res) ->
   game.setEndConfig req.body
+  res.send()
 
 app.get '/rpc/setup/metadata', (req, res) ->
   res.send(game.metadata)
 
 app.post '/rpc/setup/metadata', (req, res) ->
   game.metadata = req.body
+  res.send()
 
 wordCloudData = () ->
   multiplier = 10

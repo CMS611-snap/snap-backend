@@ -118,6 +118,9 @@ $(function() {
   });
 
   (function() {
+      $.notify.defaults({
+          autoHideDelay: 3000
+      });
       function parseNumber(selector) {
           var number = parseInt($(selector).val());
           if (isNaN(number)) {
@@ -131,6 +134,8 @@ $(function() {
               "maxSeconds": parseNumber("#endTime"),
               "maxScore": parseNumber("#endScore"),
               "maxWords": parseNumber("#endWords")
+          }, function() {
+              $.notify('Set end conditions', 'success');
           });
           return false;
       });
@@ -140,6 +145,8 @@ $(function() {
               "facilitator": $("#facilitator").val(),
               "event": $("#event").val(),
               "numPlayers": parseNumber("#numPlayers")
+          }, function() {
+              $.notify('Set game info', 'success');
           });
           return false;
       });
