@@ -7,6 +7,16 @@
  * Based on Bootstrap
 */
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
+
+table {
+  width: 100%;
+}
+
+table .formColContent {
+  margin: 5px;
+  padding: 5px;
+}
+
 .fritter-body {
   position: absolute;
   top: 60px;
@@ -20,6 +30,7 @@ html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  padding: 10px;
 }
 body {
   margin: 0;

@@ -7,40 +7,57 @@
     <script src="/js/d3.js"></script>
     <script src="/js/d3.layout.cloud.js"></script>
     <script src="/js/snap.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css"></link>
   </head>
   <body>
   <div>
+
   <h2>Moderator Controls</h2>
-  <p>
-  <a href="/admin/games">Old games</a>
-  </p>
-  <form id="endForm">
-      <label for="endTime">Time limit (seconds)</label>
-      <input id="endTime" type="text" class="form-control">
-      <br />
-      <label for="endWords">Word limit</label>
-      <input id="endWords" type="text" class="form-control">
-      <br />
-      <label for="endScore">Score limit</label>
-      <input id="endScore" type="text" class="form-control">
-      <input type="submit" value="Set end conditions">
-  </form>
-  <form id="metadataForm">
-      <label for="facilitator">Facilitator</label>
-      <input id="facilitator" type="text" class="form-control">
-      <br />
-      <label for="event">Event</label>
-      <input id="event" type="text" class="form-control">
-      <br />
-      <label for="numPlayers">Number of Players</label>
-      <input id="numPlayers" type="text" class="form-control">
-      <input type="submit" value="Set game info">
-  </form>
-  <input id="topic" type="text" class="form-control">
-  <button id="setTopicButton" type="button">Set Topic</button>
+  <p><a href="/admin/games"><h3>Old games</h3></a></p>
+  <table>
+    <tbody>
+      <tr>
+        <td class="formCol">
+          <div class="formColContent">
+            <form id="endForm">
+              <label for="endTime">Time limit (seconds)</label>
+              <input id="endTime" type="text" class="form-control" placeholder="Time Limit">
+              <br />
+              <label for="endWords">Word limit</label>
+              <input id="endWords" type="text" class="form-control" placeholder="Word limit">
+              <br />
+              <label for="endScore">Score limit</label>
+              <input id="endScore" type="text" class="form-control" placeholder="Score limit">
+              <br>
+              <input type="submit" class="btn btn-primary" value="Set end conditions">
+            </form>
+          </div>
+        </td>
+        <td class="formCol">
+          <form id="metadataForm">
+            <label for="facilitator">Facilitator</label>
+            <input id="facilitator" type="text" class="form-control" placeholder="Facilitator">
+            <br />
+            <label for="event">Event</label>
+            <input id="event" type="text" class="form-control" placeholder="Event">
+            <br />
+            <label for="numPlayers">Number of Players</label>
+            <input id="numPlayers" type="text" class="form-control" placeholder="Number of Players">
+            <br>
+            <input type="submit" class="btn btn-primary" value="Set game info">
+        </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <label for="topic">Topic</label>
+  <input id="topic" type="text" class="form-control" placeholder="Topic">
   <br>
-  <button id="startGameButton" type="button">Start Game</button>
-  <button id="stopGameButton" type="button">Stop Game</button>
+  <button id="setTopicButton" class="btn btn-primary" type="button">Set Topic</button>
+  <div></div>
+  <br><br>
+  <button id="startGameButton" class="btn btn-success" type="button">Start Game</button>
+  <button id="stopGameButton" class="btn btn-danger" type="button">Stop Game</button>
 
   <hr />
   </div>
