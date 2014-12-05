@@ -37,17 +37,13 @@ $(function() {
   $('#graph')[0].width = w;
   $('#graph')[0].height = h;
 
-  console.log(w);
-
   words = {{{json words}}}
 
   words = words.map(function(elem) {
-    return [elem.text, elem.size*2]
+    return [elem.text, elem.size]
   });
 
   words.sort(function(a, b) { return (b[1] - a[1]) });
-
-  // words = words.concat(words)
 
   WordCloud(document.getElementById('graph'), { 
     list: words,
