@@ -113,10 +113,7 @@ io.on 'connection', (socket) ->
 
     game.addPlayer(player)
 
-    socket.emit 'user joined',
-      player: socket.player.name
-
-    game.sendScores()
+    socket.emit 'user joined', player.identifier()
 
   # when the client emits 'new message', this listens and executes
   socket.on 'new word', (word, cb) ->
