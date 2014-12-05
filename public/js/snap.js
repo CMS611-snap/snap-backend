@@ -37,8 +37,12 @@ $(function() {
 
   socket.on('game started', function(info) {
     console.log('game started');
-    console.log(info);
-    $('#info').append('<br>' + 'GAME STARTED!!' + '<br>');
+    $('#info').append('<br>' + 'GAME STARTED!! ');
+    if (info.gameId) {
+      var url = '/admin/games/' + info.gameId;
+      $('#info').append('<a href="' + url + '">(word cloud)</a>');
+    }
+    $('#info').append('<br>');
   });
 
   socket.on('snap', function(data) {

@@ -42,6 +42,7 @@ class Game
   sendGameStarted: (socket) ->
       elapsed = Date.now() - @startTime
       socket.emit "game started",
+          gameId: @gameId
           gameLength: @gameLength
           maxScore: @maxScore
           maxWords: @maxWords
@@ -49,7 +50,7 @@ class Game
           players: (player.identifier() for player in @players)
           topic: @topic
 
-  startGame: () ->
+  startGame: () =>
     if not @start
       console.log "Starting Game"
       @start = true
@@ -58,8 +59,8 @@ class Game
       # insert the game to db
       @DbHelper.createGame @topic, @metadata, (res)=>
         @gameId = res
+        @sendGameStarted(@io.sockets)
 
-      @sendGameStarted(@io.sockets)
       if @gameLength
           console.log "starting timer for #{@gameLength/1000}"
           cb = () =>
@@ -182,6 +183,7 @@ class Game
   gameOver: () ->
     console.log "Ending game"
     @io.sockets.emit "game over",
+      gameId: @gameId
       scores: @scores()
       winners: @winners()
     @exportData()
