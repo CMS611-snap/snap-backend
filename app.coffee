@@ -102,17 +102,14 @@ io.on 'connection', (socket) ->
     game.setTopic(topic)
 
   socket.on 'new player', (playerName) ->
-    if socket? and socket.player?
+    if socket?.player?
       return
-    console.log("PLAYER " + playerName)
     player = new Player(0, socket, game, playerName)
-
-    DbHelper.addPlayer playerName, player.uuid
-
     socket.player = player
-
+    DbHelper.addPlayer playerName, player.uuid
     game.addPlayer(player)
 
+    console.log "PLAYER #{player.name} #{player.uuid}"
     socket.emit 'user joined', player.identifier()
 
   # when the client emits 'new message', this listens and executes
@@ -135,9 +132,9 @@ io.on 'connection', (socket) ->
 
   # when the user disconnects.. perform this
   socket.on 'disconnect', () ->
-    return if !socket? or !socket.player?
-    # console.log "Closed."
-    # console.log socket
-    socket.player.connected = false
+    player = socket?.player
+    return if not player?
+    console.log "player #{player.name} #{player.uuid} disconnected"
+    player.connected = false
 
 module.exports = app

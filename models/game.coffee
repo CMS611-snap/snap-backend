@@ -74,6 +74,8 @@ class Game
       , 2000
 
   addPlayer: (newPlayer) ->
+    if not newPlayer?
+      return
     @players.push(newPlayer)
     if @start
       @sendGameStarted(newPlayer.socket)
@@ -158,7 +160,7 @@ class Game
   winners: () ->
       winners = []
       maxScore = 0
-      for p in @players
+      for p in @players when p.connected
         if p.score > maxScore
           winners = []
           maxScore = p.score
@@ -168,7 +170,7 @@ class Game
 
   scores: () ->
     playerScores = []
-    for p in @players
+    for p in @players when p.connected
       playerScores.push
         player: p.identifier()
         score: p.score
@@ -204,7 +206,7 @@ class Game
 
   exportData: () ->
     freq = {}
-    for p in @players
+    for p in @players when p.connected
       for word of p.words
         if word in freq
           freq[word] += 1
@@ -226,12 +228,13 @@ class Game
 
   resetGame: () ->
     console.log '... resetting game ...'
-    @players = @players.filter (p) -> p.connected
+    @players = (p for p in @players when p.connected)
     for p in @players
       p.reset()
 
   getWordCounts: () ->
     counts = {}
+    # include disconnected players as well
     for player in @players
       for word of player.words
         if word of counts
@@ -242,6 +245,7 @@ class Game
 
   getWords: () ->
     words = []
+    # include disconnected players as well
     for player in @players
       for word of player.words
         words.push word
