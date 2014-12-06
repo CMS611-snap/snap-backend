@@ -100,6 +100,10 @@ class Game
       cb("duplicate", null)
       return
 
+    if @maxWords and player.word_count >= @maxWords
+      cb("max words", null)
+      return
+
     #Add the submission to db
     @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
       snapped = []
@@ -107,8 +111,9 @@ class Game
         if p.hasGuessed(word)
           snapped.push p
 
-      playerSnap = null
+      player.addWord(word)
 
+      playerSnap = null
       if snapped.length > 0
         snapped.push player
         snapped_names = snapped.map (p)-> p.identifier()
@@ -127,7 +132,6 @@ class Game
         #add the snap event to db
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
-      player.addWord(word)
       if @isGameOver()
         @gameOver()
       cb(null, playerSnap)
