@@ -4,13 +4,12 @@ module.exports = (app, DbHelper) ->
       res.send "database disabled :("
   else
     app.get '/admin/games', (req, res) ->
-      DbHelper.db('games').select(['id', 'topic', 'started_at']).orderBy('started_at', 'desc').map (row)->
-        "<a href='/admin/games/#{row.id}'>#{row.topic} - #{row.started_at}"
-      .reduce((content, row) ->
-        return content + row + ' <br> '
-      , '')
+      DbHelper.db('games')
+      .select(['id', 'topic', 'started_at'])
+      .orderBy('started_at', 'desc')
       .then (content) ->
-        res.send(content)
+        res.render 'list',
+          games: content
       .catch (error) ->
         console.log(error)
 
@@ -20,8 +19,8 @@ module.exports = (app, DbHelper) ->
       .select(DbHelper.db.raw('word, COUNT(word) as frequency'))
       .groupBy('word')
       .map (row)->
-         text: row.word
-         frequency: row.frequency
+        text: row.word
+        frequency: row.frequency
       .then (content) ->
         res.send content
       .catch (error) ->
