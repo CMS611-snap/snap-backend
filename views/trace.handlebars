@@ -4,7 +4,8 @@ config:
 events:
     {{#each players}}
     -
-        player: {{name}}
+        player: {{uuid}}
+        name: {{name}}
         type: join
         time: 0
     {{/each}}
@@ -14,7 +15,7 @@ events:
         time: 300
     {{#each words}}
     -
-        player: {{player}}
+        player: {{user_uuid}}
         type: word
         word: {{word}}
         time: {{time}}

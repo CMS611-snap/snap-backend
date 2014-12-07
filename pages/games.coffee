@@ -62,17 +62,26 @@ module.exports = (app, DbHelper) ->
       uniquePlayers = (words) ->
         players = {}
         for word in words
-          players[word.player] = true
+          players[word.user_uuid] = word.user_name
         player_list = []
-        for player, _ of players
-          player_list.push(player)
+        for uuid, name of players
+          player_list.push
+            uuid: uuid
+            name: name
         return player_list
 
-      DbHelper.db('word_submissions')
+      DbHelper.db
       .where('game_id', id)
-      .select('user_uuid', 'word', 'created_at')
+      .select(DbHelper.db.raw('word_submissions.user_uuid as user_uuid,
+        users.name as user_name,
+        word_submissions.word as word,
+        word_submissions.created_at as created_at'))
+      .from('word_submissions')
+      .innerJoin('users', 'word_submissions.user_uuid', 'users.uuid')
       .orderBy('created_at')
       .map (row) ->
+        user_uuid: row.user_uuid
+        user_name: row.user_name
         word: row.word
         player: row.user_uuid.toString()
         time: row.created_at
@@ -87,7 +96,8 @@ module.exports = (app, DbHelper) ->
         }
         res.render 'trace',
           layout: false
-          players: players.map (n) ->
-            name: n
+          players: players
           words: words
           end_time: last_time + 1000
+      .catch (error) ->
+        console.error(error)

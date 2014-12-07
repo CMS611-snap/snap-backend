@@ -14,29 +14,32 @@ var players = {};
 players['moderator'] = io(args['host'], {multiplex: false});
 
 function processEvent(event, cb) {
-    var player = event.player;
+    var uuid = event.player;
+    var name = event.name;
     if (event.type === 'join') {
-        console.info(player + ' joined');
+        console.info(name + ' joined (' + uuid + ')');
         var socket = io(args['host'], {multiplex: false});
-        players[player] = socket;
-        socket.emit('new player', player);
+        players[uuid] = socket;
+        socket.emit('new player', name);
         cb();
         return;
     }
-    var socket = players[player];
+    var socket = players[uuid];
     if (event.type === 'word') {
         var word = event.word;
-        console.info(player + ' submitted ' + word);
+        console.info(uuid + ' submitted ' + word);
         socket.emit('new word', word, function() {});
         cb();
         return;
     }
     if (event.type === 'start') {
       socket.emit('start game');
+      cb();
       return;
     }
     if (event.type === 'stop') {
       socket.emit('stop game');
+      cb();
       return;
     }
     console.warn('unknown event type: ' + event.type);
@@ -53,10 +56,10 @@ var startTime = Date.now();
 function scheduleEvent(num) {
     if (num >= trace.events.length) {
         // we're done
-        console.log("finished trace, exiting in 10s...")
+        console.log("finished trace");
         setTimeout(function() {
           process.exit(0);
-        }, 10000);
+        }, 1000);
         return;
     }
     var event = trace.events[num];

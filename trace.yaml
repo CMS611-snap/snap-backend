@@ -5,10 +5,12 @@ config:
 events:
     -
         player: test1
+        name: test player 1
         type: join
         time: 0
     -
         player: test2
+        name: test player 2
         type: join
         time: 0.3
     -
