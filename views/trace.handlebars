@@ -1,0 +1,17 @@
+version: 1
+config:
+    timeUnitMillis: 1
+events:
+    {{#each players}}
+    -
+        player: {{name}}
+        type: join
+        time: 0
+    {{/each}}
+    {{#each words}}
+    -
+        player: {{player}}
+        type: word
+        word: {{word}}
+        time: {{time}}
+    {{/each}}

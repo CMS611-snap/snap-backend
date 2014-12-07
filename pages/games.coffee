@@ -36,3 +36,37 @@ module.exports = (app, DbHelper) ->
     app.get '/admin/games/:ids', (req, res) ->
       res.render 'game',
         ids: req.params.ids
+
+    app.get '/admin/games/:id/trace.yaml', (req, res) ->
+      id = parseInt req.params.id
+      uniquePlayers = (words) ->
+        players = {}
+        for word in words
+          players[word.player] = true
+        player_list = []
+        for player, _ of players
+          player_list.push(player)
+        return player_list
+
+      DbHelper.db('word_submissions')
+      .where('game_id', id)
+      .select('user_uuid', 'word', 'created_at')
+      .orderBy('created_at')
+      .map (row) ->
+        word: row.word
+        player: row.user_uuid.toString()
+        time: row.created_at
+      .then (words) ->
+        players = uniquePlayers(words)
+        first_time = words[0].time
+        for word in words
+          # constant 10s gap between joining and first word
+          word.time = word.time - first_time + 10000
+        res.set {
+          'Content-Type': 'text/yaml'
+        }
+        res.render 'trace',
+          layout: false
+          players: players.map (n) ->
+            name: n
+          words: words
