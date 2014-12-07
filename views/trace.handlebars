@@ -8,6 +8,10 @@ events:
         type: join
         time: 0
     {{/each}}
+    -
+        player: moderator
+        type: start
+        time: 300
     {{#each words}}
     -
         player: {{player}}
@@ -15,3 +19,7 @@ events:
         word: {{word}}
         time: {{time}}
     {{/each}}
+    -
+        player: moderator
+        type: stop
+        time: {{end_time}}

@@ -79,9 +79,9 @@ module.exports = (app, DbHelper) ->
       .then (words) ->
         players = uniquePlayers(words)
         first_time = words[0].time
+        last_time = words[words.length - 1].time
         for word in words
-          # constant 10s gap between joining and first word
-          word.time = word.time - first_time + 10000
+          word.time = word.time - first_time + 1000
         res.set {
           'Content-Type': 'text/yaml'
         }
@@ -90,3 +90,4 @@ module.exports = (app, DbHelper) ->
           players: players.map (n) ->
             name: n
           words: words
+          end_time: last_time + 1000
