@@ -88,9 +88,9 @@ module.exports = (app, DbHelper) ->
       .then (words) ->
         players = uniquePlayers(words)
         first_time = words[0].time
-        last_time = words[words.length - 1].time
         for word in words
           word.time = word.time - first_time + 1000
+        last_time = words[words.length - 1].time
         res.set {
           'Content-Type': 'text/yaml'
         }
@@ -98,6 +98,6 @@ module.exports = (app, DbHelper) ->
           layout: false
           players: players
           words: words
-          end_time: last_time + 1000
+          end_time: last_time + 300
       .catch (error) ->
         console.error(error)
