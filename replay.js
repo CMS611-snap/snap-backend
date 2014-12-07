@@ -48,6 +48,9 @@ function processEvent(event, cb) {
 
 var trace = yaml.load(args['trace']);
 var timeMultiplier = trace.config.timeUnitsMillis || 1;
+if (timeMultiplier != 1) {
+  console.log('scaling times by ' + timeMultiplier);
+}
 
 var startTime = Date.now();
 
