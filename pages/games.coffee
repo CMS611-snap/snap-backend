@@ -1,3 +1,19 @@
+durationToString = (d) ->
+  fixedWidth2 = (n) ->
+    if n == 0
+      return "00"
+    if n < 10
+      return "0" + n
+    return n
+  d.minutes = d.minutes || 0
+  d.seconds = d.seconds || 0
+  duration = ""
+  if d.hours?
+    duration += fixedWidth2(d.hours) + ":"
+  duration += fixedWidth2(d.minutes)
+  duration += ":" + fixedWidth2(d.seconds)
+  return duration
+
 module.exports = (app, DbHelper) ->
   if !DbHelper.db?
     app.get '/admin/*', (req, res) ->
@@ -9,11 +25,15 @@ module.exports = (app, DbHelper) ->
         games.topic as topic, games.facilitator as facilitator,
         games.location as location, games.event as event,
         games.num_players as players,
-        COUNT(word_submissions.id) as word_count'))
+        COUNT(word_submissions.id) as word_count,
+        (MAX(word_submissions.created_at) - MIN(word_submissions.created_at)) as length'))
       .from('games')
       .innerJoin('word_submissions', 'games.id', 'word_submissions.game_id')
       .groupBy('games.id')
       .orderBy('started_at', 'desc')
+      .map (row) ->
+        row.duration = durationToString(row.length)
+        return row
       .then (content) ->
         res.render 'list',
           games: content
