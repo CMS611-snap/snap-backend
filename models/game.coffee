@@ -18,6 +18,7 @@ class Game
     @gameId = null
     @_sendScoreInterval = null
     @snapHistory = []
+    @wordSubmissionHistory = []
 
   setEndConfig: (endConfig) ->
     @endConfig = endConfig
@@ -108,6 +109,10 @@ class Game
 
     #Add the submission to db
     @DbHelper.addWordSubmission @gameId, player.uuid, word, (word_index)=>
+      @wordSubmissionHistory.push
+        player: player.identifier()
+        word: word
+
       snapped = []
       for p in @players
         if p.hasGuessed(word)
@@ -190,8 +195,10 @@ class Game
     @io.sockets.emit "scores",
       scores: @scores()
       snaps: @snapHistory
+      wordSubmissions: @wordSubmissionHistory
 
     @snapHistory = []
+    @wordSubmissionHistory = []
 
   gameOver: () ->
     console.log "Ending game"

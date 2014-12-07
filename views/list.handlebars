@@ -1,5 +1,15 @@
 <div clas="games">
+<div class='row show-grid'>
+  <div class='col-md-3'>Name</div>
+  <div class='col-md-3'>Start Time</div>
+  <div class='col-md-3'>Number of Words</div>
+</div>
 {{#each games}}
-  <a href='/admin/games/{{id}}'>{{topic}} - {{word_count}} words - {{started_at}}</a></br>
+<div class='row show-grid'>  
+    <a class='col-md-3' href='/admin/games/{{id}}'>{{topic}}</a>
+    <div class='col-md-3'>{{started_at}}</div>
+    <div class='col-md-3'>{{word_count}}</div>  
+  </br>
+</div>  
 {{/each}}
 </div>
