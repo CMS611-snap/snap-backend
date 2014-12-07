@@ -4,8 +4,15 @@ module.exports = (app, DbHelper) ->
       res.send "database disabled :("
   else
     app.get '/admin/games', (req, res) ->
-      DbHelper.db('games')
-      .select(['id', 'topic', 'started_at'])
+      DbHelper.db
+      .select(DbHelper.db.raw('games.id as id, games.started_at as started_at,
+        games.topic as topic, games.facilitator as facilitator,
+        games.location as location, games.event as event,
+        games.num_players as players,
+        COUNT(word_submissions.id) as word_count'))
+      .from('games')
+      .innerJoin('word_submissions', 'games.id', 'word_submissions.game_id')
+      .groupBy('games.id')
       .orderBy('started_at', 'desc')
       .then (content) ->
         res.render 'list',
