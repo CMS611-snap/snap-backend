@@ -34,11 +34,13 @@ function processEvent(event, cb) {
     }
     if (event.type === 'start') {
       socket.emit('start game');
+      console.log('starting game');
       cb();
       return;
     }
     if (event.type === 'stop') {
       socket.emit('stop game');
+      console.log('stopping game');
       cb();
       return;
     }
@@ -54,7 +56,9 @@ if (timeMultiplier != 1) {
 
 var startTime = Date.now();
 
-// TODO(tchajed): sort events by offset
+trace.events.sort(function(e1, e2) {
+  return e1.time - e2.time;
+});
 
 function scheduleEvent(num) {
     if (num >= trace.events.length) {
