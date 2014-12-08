@@ -75,10 +75,13 @@ class Game
       , 2000
 
   addPlayer: (newPlayer) ->
+    newPlayer.socket.emit 'Player ID', newPlayer.identifier()
     if not newPlayer?
       return
     @players.push(newPlayer)
     if @start
+      @io.sockets.emit "userJoin",
+        identifier: newPlayer.identifier()
       @sendGameStarted(newPlayer.socket)
 
   # cb will be passed error, snap, where snap is the same format as the 'snap'
