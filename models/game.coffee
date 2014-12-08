@@ -140,7 +140,11 @@ class Game
         @DbHelper.addEvent @gameId, word_index, player.uuid, {type: @DbHelper.eventType.snap}
 
       if @isGameOver()
-        @gameOver()
+        # send this with a delay to make sure players receive their final point
+        # before the game over message
+        setTimeout () =>
+          @gameOver()
+        , 500
       cb(null, playerSnap)
 
   reachedMaxScore: () ->
