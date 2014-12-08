@@ -110,7 +110,7 @@ io.on 'connection', (socket) ->
     game.addPlayer(player)
 
     console.log "PLAYER #{player.name} #{player.uuid}"
-    io.sockets.emit 'user joined', player.identifier()
+    player.socket.emit 'user joined', player.identifier()
 
   # when the client emits 'new message', this listens and executes
   socket.on 'new word', (word, cb) ->
