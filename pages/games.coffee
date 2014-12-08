@@ -24,9 +24,10 @@ module.exports = (app, DbHelper) ->
       .select(DbHelper.db.raw('games.id as id, games.started_at as started_at,
         games.topic as topic, games.facilitator as facilitator,
         games.location as location, games.event as event,
-        games.num_players as players,
+        games.num_players as num_players,
         COUNT(word_submissions.id) as word_count,
-        (MAX(word_submissions.created_at) - MIN(word_submissions.created_at)) as length'))
+        (MAX(word_submissions.created_at) - MIN(word_submissions.created_at)) as length,
+        COUNT(DISTINCT(word_submissions.user_uuid)) as num_users'))
       .from('games')
       .innerJoin('word_submissions', 'games.id', 'word_submissions.game_id')
       .groupBy('games.id')
