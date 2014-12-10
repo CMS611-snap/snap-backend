@@ -99,7 +99,7 @@ class Game
       cb("no player", null)
       return
 
-    word = word.toLowerCase().trim()
+    word = word.toString().toLowerCase().trim()
 
     #Reject word if already guessed by player
     if player.hasGuessed(word)
